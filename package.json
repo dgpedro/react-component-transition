@@ -1,0 +1,68 @@
+{
+  "name": "react-component-transition",
+  "version": "1.0.0",
+  "description": "Easy animations between react components transitions.",
+  "main": "./build/index.js",
+  "scripts": {
+    "clean": "rimraf build examples/dist",
+    "build": "webpack --color --mode production",
+    "build-dev": "webpack --color --mode development",
+    "tsc": "tsc --declaration true",
+    "prepare": "npm run clean && npm run tsc",
+    "start": "npm i && npm run clean && webpack-dev-server --mode development"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dgpedro/react-component-transition.git"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "transition",
+    "animation"
+  ],
+  "author": "dgpedro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dgpedro/react-component-transition/issues"
+  },
+  "homepage": "https://github.com/dgpedro/react-component-transition#readme",
+  "dependencies": {
+    "@types/classnames": "^2.2.10",
+    "@types/uniqid": "^5.2.0",
+    "classnames": "^2.2.6",
+    "core-js": "^3.6.5",
+    "intersection-observer": "^0.11.0",
+    "react-intersection-observer": "^8.26.2",
+    "uniqid": "^5.2.0",
+    "web-animations-js": "^2.3.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/plugin-transform-runtime": "^7.10.5",
+    "@babel/polyfill": "^7.10.4",
+    "@babel/preset-env": "^7.10.4",
+    "@types/react": "^16.9.56",
+    "@types/react-dom": "^16.9.9",
+    "@types/react-router": "^5.1.4",
+    "@types/react-router-dom": "^5.1.3",
+    "babel-loader": "^8.1.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router": "^5.1.2",
+    "react-router-dom": "^5.1.2",
+    "rimraf": "^3.0.2",
+    "ts-loader": "^4.4.1",
+    "typescript": "^4.0.5",
+    "webpack": "^4.39.1",
+    "webpack-bundle-analyzer": "^3.9.0",
+    "webpack-cli": "^3.0.7",
+    "webpack-dev-server": "^3.1.5"
+  },
+  "peerDependencies": {
+    "@types/react": "^16.8.5",
+    "@types/react-dom": "^16.8.5",
+    "react": "^16.8.0",
+    "react-dom": "^16.8.0"
+  }
+}
