@@ -21,7 +21,8 @@
     "transition",
     "animation",
     "lazy",
-    "web-animations-api"
+    "web-animations-api",
+    "typescript"
   ],
   "author": "dgpedro",
   "license": "MIT",
