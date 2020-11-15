@@ -19,7 +19,9 @@
     "react",
     "components",
     "transition",
-    "animation"
+    "animation",
+    "lazy",
+    "web-animations-api"
   ],
   "author": "dgpedro",
   "license": "MIT",
