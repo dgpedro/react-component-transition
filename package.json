@@ -1,7 +1,7 @@
 {
   "name": "react-component-transition",
   "version": "1.0.0",
-  "description": "Easy animations between react components transitions.",
+  "description": "Easy animations between react component transitions.",
   "main": "./build/index.js",
   "scripts": {
     "clean": "rimraf build examples/dist",
