@@ -20,7 +20,7 @@ Types are included in the package.
 
 ## Goal
 
-The main goal is to provide an easy and fast way to apply simple animations when transitioning from one component to another, without loosing to much time testing, adjusting, styling, etc...
+The main goal is to provide an easy and fast way to apply simple animations when transitioning from one component to another, without loosing too much time testing, adjusting, styling, etc...
 With a couple of code lines, it's possible to make any react page much more interactive and user friendly.
 
 ## Polyfills
