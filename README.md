@@ -230,5 +230,6 @@ style | React.CSSProperties | `undefined` | Inline styles to set in the containe
 
 Clone the repo first and then:
 ```
-npm run start
+npm install
+npm start
 ```

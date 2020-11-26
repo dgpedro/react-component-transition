@@ -13,9 +13,9 @@ module.exports = (env, options) => {
             'examples': './examples/src/index'
         },
         output: {
-            path: path.join(__dirname, "examples/dist"),
+            path: path.join(__dirname, "docs/dist"),
             filename: "[name].js",
-            publicPath: "/examples/dist/",
+            publicPath: "/docs/dist/",
         },
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
@@ -59,7 +59,7 @@ module.exports = (env, options) => {
             compress: true,
             overlay: true,
             port: 8080,
-            contentBase: path.join(__dirname, 'examples'),
+            contentBase: path.join(__dirname, 'docs'),
             writeToDisk: true,
             historyApiFallback: {
                 index: '/index.html'

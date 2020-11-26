@@ -1,6 +1,7 @@
 /examples
 /node_modules
 /.vscode
+/docs
 
 .gitignore
 tsconfig.json

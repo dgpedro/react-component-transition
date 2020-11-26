@@ -4,12 +4,13 @@
   "description": "Easy animations between react component transitions.",
   "main": "./build/index.js",
   "scripts": {
-    "clean": "rimraf build examples/dist",
+    "clean": "rimraf build docs/dist",
     "build": "webpack --color --mode production",
     "build-dev": "webpack --color --mode development",
-    "tsc": "tsc --declaration true",
     "prepare": "npm run clean && npm run tsc",
-    "start": "npm i && npm run clean && webpack-dev-server --mode development"
+    "prestart": "npm run clean",
+    "start": "webpack-dev-server --mode development",
+    "tsc": "tsc --declaration true"
   },
   "repository": {
     "type": "git",
