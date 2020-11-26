@@ -2,6 +2,9 @@
 
 Easy to use react component to apply animations between component transitions, by using **[Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API)**.
 
+## Demo
+**[https://dgpedro.github.io/react-component-transition/](https://dgpedro.github.io/react-component-transition/)**
+
 ## Install
 
 ```
