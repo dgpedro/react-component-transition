@@ -6,7 +6,10 @@ interface Props extends ComponentTransitionProps {
     index: number;
 }
 
-export const ListItem: React.FC<Props> = ({ index, ...props }) => {
+export const ListItem: React.FC<Props> = React.memo(({ index, ...props }) => {
+
+    console.log(`======================= RENDER ${index} =============================`);
+
     return (
         <div style={styles.listItem}>
             <ComponentTransition
@@ -18,19 +21,20 @@ export const ListItem: React.FC<Props> = ({ index, ...props }) => {
             />
         </div>
     );
-}
+});
 
 const enterAnimation: AnimationSettings = {
     keyframes: [
         { transform: "translate3d(0,-100%,0)" },
-        { transform: "translate3d(0,-95%,0)" },
-        { transform: "translate3d(0,-95%,0)" },
-        { transform: "translate3d(0,-90%,0)" },
-        { transform: "translate3d(0,-90%,0)" },
-        { transform: "translate3d(0,-90%,0)" },
-        { transform: "translate3d(0,-85%,0)" },
-        { transform: "translate3d(0,-80%,0)" },
-        { transform: "translate3d(0,0%,0)" },
+        { transform: "translate3d(0,-50%,0)" },
+        { transform: "translate3d(0,50%,0)" },
+        { transform: "translate3d(0,25%,0)" },
+        { transform: "translate3d(0,-25%,0)" },
+        { transform: "translate3d(0,10%,0)" },
+        { transform: "translate3d(0,-10%,0)" },
+        { transform: "translate3d(0,5%,0)" },
+        { transform: "translate3d(0,-5%,0)" },
+        { transform: "translate3d(0,0,0)" },
     ],
     options: {
         duration: 500,

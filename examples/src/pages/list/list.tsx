@@ -17,12 +17,29 @@ export const List = () => {
         newItem(),
     ]);
 
-    const add = (index: number) => {
-        setItems((list) =>
-            [...list.slice(0, index + 1), newItem(), ...list.slice(index + 1)]);
+    // const add = (ev: React.MouseEvent<HTMLButtonElement>) => {
+    //     const index = Number((ev.target as HTMLButtonElement).name);
+    //     setItems((list) =>
+    //         [...list.slice(0, index + 1), newItem(), ...list.slice(index + 1)]);
+    // };
+
+    const add = (ev: React.MouseEvent<HTMLButtonElement>) => {
+        const index = Number((ev.target as HTMLButtonElement).name);
+        if (items.length === 4) {
+            setItems((list) => [
+                ...list.slice(0, 1),
+                newItem(),
+                ...list.slice(1, 2),
+                newItem(),
+            ]);
+        } else {
+            setItems((list) =>
+                [...list.slice(0, index + 1), newItem(), ...list.slice(index + 1)]);
+        }
     };
 
-    const remove = (index: number) => {
+    const remove = (ev: React.MouseEvent<HTMLButtonElement>) => {
+        const index = Number((ev.target as HTMLButtonElement).name);
         setItems((list) => list.filter((_, i) => i !== index));
     };
 
@@ -36,17 +53,19 @@ export const List = () => {
                                 <Box
                                     color={color}
                                     size={Size.Small}
-                                />
+                                >{id}</Box>
                                 <button
                                     type="button"
+                                    name={index.toString()}
                                     style={{ ...styles.button, ...styles.cross }}
-                                    onClick={remove.bind(null, index)}
+                                    onClick={remove}
                                 >X</button>
                                 <div style={styles.plusContainer}>
                                     <button
                                         type="button"
+                                        name={index.toString()}
                                         style={{ ...styles.button, ...styles.plus }}
-                                        onClick={add.bind(null, index)}
+                                        onClick={add}
                                     >+</button>
                                 </div>
                             </div>

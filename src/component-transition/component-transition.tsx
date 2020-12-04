@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Transition } from "./transition";
-import { LazyTransition } from "./lazy-transition";
+import { Transition, LazyTransition } from "../transition";
 import { ComponentTransitionProps } from "../types";
 
 export const ComponentTransition: React.FC<ComponentTransitionProps> = (props) => {

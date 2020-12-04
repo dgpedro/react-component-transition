@@ -12,17 +12,38 @@ import {
     useEnterAnimation,
 } from "./animation-hooks";
 
-interface Props extends ComponentTransitionProps {
+export interface TransitionProps extends ComponentTransitionProps {
+    listId?: string;
+    onExitFinishedListCallback?: (listId: string) => void;
+}
+
+interface Props extends TransitionProps {
     inViewRef?: (element: HTMLElement) => void;
 }
 
-export const Transition: React.FC<Props> = (props) => {
+export const Transition: React.FC<Props> = ({
+    animateContainer,
+    animateContainerDuration,
+    animateContainerEasing,
+    animateOnMount,
+    children,
+    className,
+    classNameEnter,
+    classNameExit,
+    disabled,
+    enterAnimation,
+    exitAnimation,
+    inViewRef,
+    listId,
+    onEnterFinished,
+    onExitFinished,
+    onExitFinishedListCallback,
+    style,
+}) => {
 
     const [transitionState, setTransitionState] = useState<TransitionState>(null);
 
-    const { children, inViewRef, disabled } = props;
-
-    const prevChildren = useRef<React.ReactNode>(props.animateOnMount ? null : children);
+    const prevChildren = useRef<React.ReactNode>(animateOnMount ? null : children);
     const containerRef = useRef<HTMLDivElement>(null);
     const unmounted = useRef(false);
 
@@ -68,12 +89,13 @@ export const Transition: React.FC<Props> = (props) => {
     useExitAnimation({
         ...animationHooks,
         prevClientRect: prevClientRect,
-        settings: props.exitAnimation,
+        settings: exitAnimation,
         onFinish: () => {
             const hadPrevChildren = !!prevChildren.current;
             prevChildren.current = children;
             if (hadPrevChildren && prevChildren.current) {
-                props.onExitFinished && props.onExitFinished();
+                onExitFinished && onExitFinished();
+                listId && onExitFinishedListCallback && onExitFinishedListCallback(listId);
             }
             udpatedState(TransitionState.ContainerRect);
         },
@@ -83,12 +105,13 @@ export const Transition: React.FC<Props> = (props) => {
         ...animationHooks,
         prevClientRect,
         nextClientRect,
-        animateContainer: props.animateContainer,
-        animateContainerDuration: props.animateContainerDuration,
-        animateContainerEasing: props.animateContainerEasing,
+        animateContainer,
+        animateContainerDuration,
+        animateContainerEasing,
         onFinish: () => {
             if (!prevChildren.current) {
-                props.onExitFinished && props.onExitFinished();
+                onExitFinished && onExitFinished();
+                listId && onExitFinishedListCallback && onExitFinishedListCallback(listId);
             }
             udpatedState(TransitionState.Enter);
         },
@@ -97,10 +120,10 @@ export const Transition: React.FC<Props> = (props) => {
     useEnterAnimation({
         ...animationHooks,
         nextClientRect,
-        settings: props.enterAnimation,
+        settings: enterAnimation,
         onFinish: () => {
             if (prevChildren.current) {
-                props.onEnterFinished && props.onEnterFinished();
+                onEnterFinished && onEnterFinished();
             }
             udpatedState(null);
         },
@@ -126,12 +149,12 @@ export const Transition: React.FC<Props> = (props) => {
             ref={setRefs}
             className={
                 classnames(
-                    props.className,
-                    transitionState === TransitionState.Enter && props.classNameEnter,
-                    transitionState === TransitionState.Exit && props.classNameExit,
+                    className,
+                    transitionState === TransitionState.Enter && classNameEnter,
+                    transitionState === TransitionState.Exit && classNameExit,
                 ) || null}
             style={{
-                ...props.style,
+                ...style,
                 opacity: hideContent ? 0 : null,
             }}
         >
