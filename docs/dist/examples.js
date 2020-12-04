@@ -497,7 +497,11 @@ exports.List = function () {
                             react_1.default.createElement("button", { type: "button", name: index.toString(), style: tslib_1.__assign(tslib_1.__assign({}, styles.button), styles.plus), onClick: add }, "+")))));
             })))));
 };
-var newItem = function () { return ({ id: uniqid_1.default(), color: randomColor() }); };
+// const newItem = () => ({ id: uniqid(), color: randomColor() });
+var newItem = function (id) {
+    if (id === void 0) { id = uniqid_1.default(); }
+    return ({ id: id, color: randomColor() });
+};
 var randomColor = function () { return colorsMap[randomInt(0, 4)]; };
 var randomInt = function (min, max) {
     return min + Math.floor(((max + 1) - min) * Math.random());
@@ -46130,53 +46134,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ComponentTransitionList = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var react_1 = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var use_transform_children_1 = __webpack_require__(/*! ./use-transform-children */ "./src/component-transition-list/use-transform-children.ts");
-// interface IInternalKeysMap {
-//     [index: string]: Key;
-// }
-// interface IChildrenMapper {
-//     [index: string]: {
-//         children: React.ReactNode,
-//         type: React.ComponentType<TransitionProps>,
-//         props: TransitionProps,
-//     };
-// }
+var use_children_manager_1 = __webpack_require__(/*! ./use-children-manager */ "./src/component-transition-list/use-children-manager.ts");
 exports.ComponentTransitionList = function (props) {
     var children = props.children;
     var _a = react_1.useState(0), setCounter = _a[1];
-    // const keysMapper = useRef<IInternalKeysMap>({});
-    var childrenMapper = react_1.useRef({});
-    var keys = react_1.useRef([]);
-    var exitCounter = react_1.useRef(0);
     var mounted = react_1.useRef(false);
     react_1.useEffect(function () {
         mounted.current = true;
     }, []);
-    var updatedState = use_transform_children_1.useTransformChildren(
-    // keysMapper.current,
-    childrenMapper.current, keys.current, children);
-    // keysMapper.current = updatedState.keysMapperUpdated;
-    childrenMapper.current = updatedState.childrenMapperUpdated;
-    keys.current = updatedState.internalKeysList;
-    exitCounter.current = updatedState.exitCount;
+    var _b = use_children_manager_1.useChildrenManager(children), childrenMapper = _b.childrenMapper, exitCounter = _b.exitCounter, internalKeys = _b.internalKeys, removeChild = _b.removeChild;
     var onExitFinished = function (internalKey) {
-        // if (keysMapper.current[internalKey] !== null) {
-        //     return;
-        // }
-        var _a;
-        if ((_a = childrenMapper.current[internalKey]) === null || _a === void 0 ? void 0 : _a.children) {
-            return;
-        }
-        exitCounter.current--;
-        // delete keysMapper.current[internalKey];
-        delete childrenMapper.current[internalKey];
-        keys.current = keys.current.filter(function (key) { return key !== internalKey; });
-        if (exitCounter.current === 0) {
+        removeChild(internalKey);
+        if (exitCounter === 0) {
             setCounter(function (counterState) { return counterState + 1; });
         }
     };
-    return (react_1.default.createElement(react_1.default.Fragment, null, keys.current.map(function (internalKey) {
-        var _a = childrenMapper.current[internalKey], props = _a.props, type = _a.type, children = _a.children;
+    return (react_1.default.createElement(react_1.default.Fragment, null, internalKeys.map(function (internalKey) {
+        var _a = childrenMapper[internalKey], props = _a.props, type = _a.type, children = _a.children;
         return react_1.default.createElement(type, tslib_1.__assign(tslib_1.__assign({}, props), { key: internalKey, animateOnMount: mounted.current || (props === null || props === void 0 ? void 0 : props.animateOnMount), onExitFinishedListCallback: onExitFinished, listId: internalKey }), children);
     })));
 };
@@ -46202,19 +46176,19 @@ Object.defineProperty(exports, "ComponentTransitionList", { enumerable: true, ge
 
 /***/ }),
 
-/***/ "./src/component-transition-list/use-transform-children.ts":
-/*!*****************************************************************!*\
-  !*** ./src/component-transition-list/use-transform-children.ts ***!
-  \*****************************************************************/
+/***/ "./src/component-transition-list/use-children-manager.ts":
+/*!***************************************************************!*\
+  !*** ./src/component-transition-list/use-children-manager.ts ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.useTransformChildren = void 0;
+exports.useChildrenManager = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var react_1 = tslib_1.__importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var uniqid_1 = tslib_1.__importDefault(__webpack_require__(/*! uniqid */ "./node_modules/uniqid/index.js"));
 var invertMapper = function (keysMapper) {
     var inverted = {};
@@ -46226,19 +46200,22 @@ var invertMapper = function (keysMapper) {
     }
     return inverted;
 };
-exports.useTransformChildren = function (childrenMapper, internalKeys, children) {
+exports.useChildrenManager = function (children) {
+    var childrenMapper = react_1.useRef({});
+    var internalKeys = react_1.useRef([]);
+    var exitCounter = react_1.useRef(0);
     if (!children) {
         return {
-            childrenMapperUpdated: childrenMapper,
-            internalKeysList: internalKeys,
-            exitCount: 0,
+            childrenMapper: childrenMapper.current,
+            internalKeys: internalKeys.current,
+            exitCounter: 0,
+            removeChild: function () { },
         };
     }
-    var inverted = invertMapper(childrenMapper);
-    var childrenMapperUpdated = tslib_1.__assign({}, childrenMapper);
-    var internalKeysList = [];
+    var inverted = invertMapper(childrenMapper.current);
+    var internalKeysUpdated = [];
     var childrenKeysAssert = {};
-    var newIndexes = [];
+    var newChildrenIndexes = [];
     react_1.default.Children.forEach(children, function (child, i) {
         var childKey = child === null || child === void 0 ? void 0 : child.key;
         var childInternalKey = inverted[childKey];
@@ -46248,35 +46225,48 @@ exports.useTransformChildren = function (childrenMapper, internalKeys, children)
         }
         if (childKey !== undefined && childKey !== null && childInternalKey === undefined) {
             var newKey = uniqid_1.default();
-            internalKeysList.push(newKey);
-            childrenMapperUpdated[newKey] = getChildProps(child);
+            internalKeysUpdated.push(newKey);
+            childrenMapper.current[newKey] = getChildProps(child);
             childrenKeysAssert[childKey] = newKey;
-            newIndexes.push(i);
+            newChildrenIndexes.push(i);
         }
         else if (childInternalKey) {
-            internalKeysList.push(childInternalKey);
-            childrenMapperUpdated[childInternalKey] = getChildProps(child);
+            internalKeysUpdated.push(childInternalKey);
+            childrenMapper.current[childInternalKey] = getChildProps(child);
             childrenKeysAssert[childKey] = childInternalKey;
         }
     });
-    var exitCounter = 0;
+    exitCounter.current = 0;
     var _loop_1 = function (i) {
-        var exists = internalKeysList.indexOf(internalKeys[i]) > -1;
+        var exists = internalKeysUpdated.indexOf(internalKeys.current[i]) > -1;
         if (!exists) {
-            var accumulator = newIndexes.filter(function (newI) { return newI <= i; }).length;
+            var accumulator = newChildrenIndexes.filter(function (newIndex) { return newIndex <= i; }).length;
             var index = i + accumulator;
-            internalKeysList = tslib_1.__spreadArrays(internalKeysList.slice(0, index), [internalKeys[i]], internalKeysList.slice(index));
-            childrenMapperUpdated[internalKeys[i]].children = null;
-            exitCounter++;
+            internalKeysUpdated = tslib_1.__spreadArrays(internalKeysUpdated.slice(0, index), [
+                internalKeys.current[i]
+            ], internalKeysUpdated.slice(index));
+            childrenMapper.current[internalKeys.current[i]].children = null;
+            exitCounter.current++;
         }
     };
-    for (var i = 0; i < internalKeys.length; i++) {
+    for (var i = 0; i < internalKeys.current.length; i++) {
         _loop_1(i);
     }
+    internalKeys.current = internalKeysUpdated;
+    var removeChild = function (internalKey) {
+        var _a;
+        if ((_a = childrenMapper.current[internalKey]) === null || _a === void 0 ? void 0 : _a.children) {
+            return;
+        }
+        exitCounter.current--;
+        delete childrenMapper.current[internalKey];
+        internalKeys.current = internalKeys.current.filter(function (key) { return key !== internalKey; });
+    };
     return {
-        childrenMapperUpdated: childrenMapperUpdated,
-        internalKeysList: internalKeysList,
-        exitCount: exitCounter,
+        childrenMapper: childrenMapper.current,
+        internalKeys: internalKeys.current,
+        exitCounter: exitCounter,
+        removeChild: removeChild,
     };
 };
 var getChildProps = function (child) {

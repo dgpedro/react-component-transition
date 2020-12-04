@@ -77,7 +77,8 @@ export const List = () => {
     );
 };
 
-const newItem = () => ({ id: uniqid(), color: randomColor() });
+// const newItem = () => ({ id: uniqid(), color: randomColor() });
+const newItem = (id = uniqid()) => ({ id, color: randomColor() });
 
 const randomColor = () => colorsMap[randomInt(0, 4)];
 
