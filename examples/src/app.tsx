@@ -9,7 +9,7 @@ import { Transition } from "./pages/transition";
 import { List } from "./pages/list";
 
 export const App: React.FC = () => (
-    <BrowserRouter>
+    <BrowserRouter basename="react-component-transition">
         <div style={styles.main}>
             <div style={styles.table}>
                 <div style={styles.menu}>

@@ -105,7 +105,7 @@ var menu_1 = __webpack_require__(/*! ./menu */ "./examples/src/menu.tsx");
 var show_hide_1 = __webpack_require__(/*! ./pages/show-hide */ "./examples/src/pages/show-hide/index.ts");
 var transition_1 = __webpack_require__(/*! ./pages/transition */ "./examples/src/pages/transition/index.ts");
 var list_1 = __webpack_require__(/*! ./pages/list */ "./examples/src/pages/list/index.ts");
-exports.App = function () { return (react_1.default.createElement(react_router_dom_1.BrowserRouter, null,
+exports.App = function () { return (react_1.default.createElement(react_router_dom_1.BrowserRouter, { basename: "react-component-transition" },
     react_1.default.createElement("div", { style: styles.main },
         react_1.default.createElement("div", { style: styles.table },
             react_1.default.createElement("div", { style: styles.menu },
@@ -46214,6 +46214,7 @@ Object.defineProperty(exports, "ComponentTransitionList", { enumerable: true, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.useTransformChildren = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var react_1 = tslib_1.__importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var uniqid_1 = tslib_1.__importDefault(__webpack_require__(/*! uniqid */ "./node_modules/uniqid/index.js"));
 var invertMapper = function (keysMapper) {
     var inverted = {};
@@ -46237,34 +46238,40 @@ exports.useTransformChildren = function (childrenMapper, internalKeys, children)
     var childrenMapperUpdated = tslib_1.__assign({}, childrenMapper);
     var internalKeysList = [];
     var childrenKeysAssert = {};
-    for (var _i = 0, children_1 = children; _i < children_1.length; _i++) {
-        var child = children_1[_i];
+    var newIndexes = [];
+    react_1.default.Children.forEach(children, function (child, i) {
         var childKey = child === null || child === void 0 ? void 0 : child.key;
         var childInternalKey = inverted[childKey];
         if (childrenKeysAssert[childKey]) {
             logError("Detected duplicated key `" + childKey + "` in two children. Children keys should be unique.");
-            continue;
+            return;
         }
         if (childKey !== undefined && childKey !== null && childInternalKey === undefined) {
             var newKey = uniqid_1.default();
             internalKeysList.push(newKey);
             childrenMapperUpdated[newKey] = getChildProps(child);
             childrenKeysAssert[childKey] = newKey;
+            newIndexes.push(i);
         }
         else if (childInternalKey) {
             internalKeysList.push(childInternalKey);
             childrenMapperUpdated[childInternalKey] = getChildProps(child);
             childrenKeysAssert[childKey] = childInternalKey;
         }
-    }
+    });
     var exitCounter = 0;
-    for (var i = 0; i < internalKeys.length; i++) {
+    var _loop_1 = function (i) {
         var exists = internalKeysList.indexOf(internalKeys[i]) > -1;
         if (!exists) {
-            internalKeysList = tslib_1.__spreadArrays(internalKeysList.slice(0, i), [internalKeys[i]], internalKeysList.slice(i));
+            var accumulator = newIndexes.filter(function (newI) { return newI <= i; }).length;
+            var index = i + accumulator;
+            internalKeysList = tslib_1.__spreadArrays(internalKeysList.slice(0, index), [internalKeys[i]], internalKeysList.slice(index));
             childrenMapperUpdated[internalKeys[i]].children = null;
             exitCounter++;
         }
+    };
+    for (var i = 0; i < internalKeys.length; i++) {
+        _loop_1(i);
     }
     return {
         childrenMapperUpdated: childrenMapperUpdated,

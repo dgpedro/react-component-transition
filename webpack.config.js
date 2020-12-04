@@ -60,11 +60,13 @@ module.exports = (env, options) => {
             overlay: true,
             port: 8080,
             contentBase: path.join(__dirname, 'docs'),
+            publicPath: "/react-component-transition/dist/",
             writeToDisk: true,
             historyApiFallback: {
                 index: '/index.html'
             },
             open: true,
+            openPage: 'react-component-transition'
         }
     }
 }
