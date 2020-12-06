@@ -13,8 +13,8 @@ import {
 } from "./animation-hooks";
 
 export interface TransitionProps extends ComponentTransitionProps {
-    listId?: string;
-    onExitFinishedListCallback?: (listId: string) => void;
+    __INTERNAL_listId__?: string;
+    __INTERNAL_onExitFinishedListCallback__?: (listId: string) => void;
 }
 
 interface Props extends TransitionProps {
@@ -34,10 +34,10 @@ export const Transition: React.FC<Props> = ({
     enterAnimation,
     exitAnimation,
     inViewRef,
-    listId,
+    __INTERNAL_listId__: listId,
     onEnterFinished,
     onExitFinished,
-    onExitFinishedListCallback,
+    __INTERNAL_onExitFinishedListCallback__: onExitFinishedListCallback,
     style,
 }) => {
 

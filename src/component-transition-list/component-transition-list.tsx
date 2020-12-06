@@ -7,10 +7,12 @@ interface TransitionListProps {
     children: React.ReactElement<TransitionProps>[];
 }
 
-export const ComponentTransitionList: React.FC<TransitionListProps> = (props) => {
-    const { children } = props;
-
+export const ComponentTransitionList: React.FC<TransitionListProps> = ({
+    children
+}) => {
     const [, setCounter] = useState(0);
+
+    const exitCounter = useRef(0);
     const mounted = useRef(false);
 
     useEffect(() => {
@@ -19,19 +21,25 @@ export const ComponentTransitionList: React.FC<TransitionListProps> = (props) =>
 
     const {
         childrenMapper,
-        exitCounter,
         internalKeys,
+        exitCounter: exiting,
         removeChild,
     } =
         useChildrenManager(
             children as React.ReactElement<PropsWithChildren<TransitionProps>>[],
         );
 
+    exitCounter.current = exiting;
+
     const onExitFinished = (internalKey: string) => {
+        if (childrenMapper[internalKey]?.children) {
+            return;
+        }
 
         removeChild(internalKey);
+        exitCounter.current--;
 
-        if (exitCounter === 0) {
+        if (exitCounter.current === 0) {
             setCounter((counterState) => counterState + 1);
         }
     };
@@ -48,8 +56,8 @@ export const ComponentTransitionList: React.FC<TransitionListProps> = (props) =>
                             ...props,
                             key: internalKey,
                             animateOnMount: mounted.current || props?.animateOnMount,
-                            onExitFinishedListCallback: onExitFinished,
-                            listId: internalKey,
+                            __INTERNAL_onExitFinishedListCallback__: onExitFinished,
+                            __INTERNAL_listId__: internalKey,
                         },
                         children,
                     );

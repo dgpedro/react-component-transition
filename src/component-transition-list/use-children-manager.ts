@@ -29,7 +29,6 @@ export const useChildrenManager = (
 
     const childrenMapper = useRef<ChildMapper>({});
     const internalKeys = useRef<string[]>([]);
-    const exitCounter = useRef(0);
 
     if (!children) {
         return {
@@ -68,34 +67,30 @@ export const useChildrenManager = (
         }
     });
 
-    exitCounter.current = 0;
+    let exitCounter = 0;
 
     for (let i = 0; i < internalKeys.current.length; i++) {
         const exists = internalKeysUpdated.indexOf(internalKeys.current[i]) > -1;
 
-        if (!exists) {
-            const accumulator = newChildrenIndexes.filter((newIndex) => newIndex <= i).length;
-            const index = i + accumulator;
-
-            internalKeysUpdated = [
-                ...internalKeysUpdated.slice(0, index),
-                internalKeys.current[i],
-                ...internalKeysUpdated.slice(index)
-            ];
-            childrenMapper.current[internalKeys.current[i]].children = null;
-            exitCounter.current++;
+        if (exists) {
+            continue;
         }
+
+        const accumulator = newChildrenIndexes.filter((newIndex) => newIndex <= i).length;
+        const index = i + accumulator;
+
+        internalKeysUpdated = [
+            ...internalKeysUpdated.slice(0, index),
+            internalKeys.current[i],
+            ...internalKeysUpdated.slice(index)
+        ];
+        childrenMapper.current[internalKeys.current[i]].children = null;
+        exitCounter++;
     }
 
     internalKeys.current = internalKeysUpdated;
 
     const removeChild = (internalKey: string) => {
-        if (childrenMapper.current[internalKey]?.children) {
-            return;
-        }
-
-        exitCounter.current--;
-
         delete childrenMapper.current[internalKey];
         internalKeys.current = internalKeys.current.filter((key) => key !== internalKey);
     };
