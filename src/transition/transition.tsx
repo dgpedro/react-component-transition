@@ -1,8 +1,6 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState, useCallback, useContext } from "react";
 import classnames from "classnames";
 
-import { ComponentTransitionProps } from "../types";
-import { defaultTransitionDuration, defaultTransitionEasing } from "../animations/defaults";
 import { TransitionState } from "./animation-hooks/types";
 import {
     AnimationHook,
@@ -11,13 +9,12 @@ import {
     useContainerAnimation,
     useEnterAnimation,
 } from "./animation-hooks";
+import { TransitionContext } from "./transition-context";
 
-export interface TransitionProps extends ComponentTransitionProps {
-    __INTERNAL_listId__?: string;
-    __INTERNAL_onExitFinishedListCallback__?: (listId: string) => void;
-}
+import { ComponentTransitionProps } from "../types";
+import { defaultTransitionDuration, defaultTransitionEasing } from "../animations/defaults";
 
-interface Props extends TransitionProps {
+interface Props extends ComponentTransitionProps {
     inViewRef?: (element: HTMLElement) => void;
 }
 
@@ -25,8 +22,8 @@ export const Transition: React.FC<Props> = ({
     animateContainer,
     animateContainerDuration,
     animateContainerEasing,
-    animateOnMount,
-    children,
+    animateOnMount: animateOnMountProp,
+    children: childrenProp,
     className,
     classNameEnter,
     classNameExit,
@@ -34,14 +31,17 @@ export const Transition: React.FC<Props> = ({
     enterAnimation,
     exitAnimation,
     inViewRef,
-    __INTERNAL_listId__: listId,
     onEnterFinished,
     onExitFinished,
-    __INTERNAL_onExitFinishedListCallback__: onExitFinishedListCallback,
     style,
 }) => {
 
     const [transitionState, setTransitionState] = useState<TransitionState>(null);
+
+    const context = useContext(TransitionContext);
+
+    const children = context?.shouldExit ? null : childrenProp;
+    const animateOnMount = context?.shouldEnter || animateOnMountProp;
 
     const prevChildren = useRef<React.ReactNode>(animateOnMount ? null : children);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -86,6 +86,14 @@ export const Transition: React.FC<Props> = ({
         onFinish: () => udpatedState(TransitionState.Container),
     });
 
+    const exitFinishedHandler = () => {
+        onExitFinished && onExitFinished();
+        // listId && onExitFinishedListCallback && onExitFinishedListCallback(listId);
+        if (context?.contextId && context?.onExitFinished) {
+            context.onExitFinished(context.contextId);
+        }
+    };
+
     useExitAnimation({
         ...animationHooks,
         prevClientRect: prevClientRect,
@@ -94,8 +102,7 @@ export const Transition: React.FC<Props> = ({
             const hadPrevChildren = !!prevChildren.current;
             prevChildren.current = children;
             if (hadPrevChildren && prevChildren.current) {
-                onExitFinished && onExitFinished();
-                listId && onExitFinishedListCallback && onExitFinishedListCallback(listId);
+                exitFinishedHandler();
             }
             udpatedState(TransitionState.ContainerRect);
         },
@@ -110,8 +117,7 @@ export const Transition: React.FC<Props> = ({
         animateContainerEasing,
         onFinish: () => {
             if (!prevChildren.current) {
-                onExitFinished && onExitFinished();
-                listId && onExitFinishedListCallback && onExitFinishedListCallback(listId);
+                exitFinishedHandler();
             }
             udpatedState(TransitionState.Enter);
         },

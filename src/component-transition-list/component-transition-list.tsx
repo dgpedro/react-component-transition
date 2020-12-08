@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect, PropsWithChildren } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import { useChildrenManager } from "./use-children-manager";
-import { TransitionProps } from "../transition";
+import { TransitionContext, TransitionContextProps } from "../transition";
 
 interface TransitionListProps {
-    children: React.ReactElement<TransitionProps>[];
+    children: React.ReactElement[];
 }
 
 export const ComponentTransitionList: React.FC<TransitionListProps> = ({
@@ -25,14 +25,12 @@ export const ComponentTransitionList: React.FC<TransitionListProps> = ({
         exitCounter: exiting,
         removeChild,
     } =
-        useChildrenManager(
-            children as React.ReactElement<PropsWithChildren<TransitionProps>>[],
-        );
+        useChildrenManager(children as React.ReactElement[]);
 
     exitCounter.current = exiting;
 
     const onExitFinished = (internalKey: string) => {
-        if (childrenMapper[internalKey]?.children) {
+        if (!childrenMapper[internalKey]?.shouldExit) {
             return;
         }
 
@@ -48,18 +46,19 @@ export const ComponentTransitionList: React.FC<TransitionListProps> = ({
         <>
             {
                 internalKeys.map((internalKey) => {
-                    const { props, type, children } = childrenMapper[internalKey];
+                    const { children, shouldEnter, shouldExit } = childrenMapper[internalKey];
 
-                    return React.createElement(
-                        type,
-                        {
-                            ...props,
-                            key: internalKey,
-                            animateOnMount: mounted.current || props?.animateOnMount,
-                            __INTERNAL_onExitFinishedListCallback__: onExitFinished,
-                            __INTERNAL_listId__: internalKey,
-                        },
-                        children,
+                    const context: TransitionContextProps = {
+                        contextId: internalKey,
+                        onExitFinished,
+                        shouldEnter: mounted.current && shouldEnter,
+                        shouldExit,
+                    };
+
+                    return (
+                        <TransitionContext.Provider key={internalKey} value={context}>
+                            {children}
+                        </TransitionContext.Provider>
                     );
                 })
             }

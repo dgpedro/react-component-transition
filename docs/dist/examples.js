@@ -383,11 +383,16 @@ exports.ListItem = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var react_1 = tslib_1.__importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var src_1 = __webpack_require__(/*! ../../../../src */ "./src/index.ts");
+var components_1 = __webpack_require__(/*! ../../components */ "./examples/src/components/index.ts");
 exports.ListItem = react_1.default.memo(function (_a) {
-    var index = _a.index, props = tslib_1.__rest(_a, ["index"]);
-    console.log("======================= RENDER " + index + " =============================");
-    return (react_1.default.createElement("div", { style: styles.listItem },
-        react_1.default.createElement(src_1.ComponentTransition, tslib_1.__assign({ animateContainer: true, enterAnimation: enterAnimation, exitAnimation: index % 2 === 0 ? exitLeft : exitRight, style: styles.transition }, props))));
+    var index = _a.index, color = _a.color, onAdd = _a.onAdd, onRemove = _a.onRemove;
+    return (react_1.default.createElement("div", { style: styles.listItemContainer },
+        react_1.default.createElement(src_1.ComponentTransition, { animateContainer: true, enterAnimation: enterAnimation, exitAnimation: index % 2 === 0 ? exitLeft : exitRight, style: styles.transition },
+            react_1.default.createElement("div", { style: styles.listItem },
+                react_1.default.createElement(components_1.Box, { color: color, size: components_1.Size.Small }),
+                react_1.default.createElement("button", { type: "button", style: tslib_1.__assign(tslib_1.__assign({}, styles.button), styles.cross), onClick: onRemove.bind(null, index) }, "X"),
+                react_1.default.createElement("div", { style: styles.plusContainer },
+                    react_1.default.createElement("button", { type: "button", style: tslib_1.__assign(tslib_1.__assign({}, styles.button), styles.plus), onClick: onAdd.bind(null, index) }, "+"))))));
 });
 var enterAnimation = {
     keyframes: [
@@ -425,99 +430,13 @@ var exitRight = [
     exitFade,
 ];
 var styles = {
-    listItem: {
+    listItemContainer: {
         width: "300px",
         overflow: "hidden",
     },
     transition: {
         width: "100px",
         margin: "auto",
-    },
-};
-
-
-/***/ }),
-
-/***/ "./examples/src/pages/list/list.tsx":
-/*!******************************************!*\
-  !*** ./examples/src/pages/list/list.tsx ***!
-  \******************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.List = void 0;
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-var react_1 = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var uniqid_1 = tslib_1.__importDefault(__webpack_require__(/*! uniqid */ "./node_modules/uniqid/index.js"));
-var components_1 = __webpack_require__(/*! ../../components */ "./examples/src/components/index.ts");
-var src_1 = __webpack_require__(/*! ../../../../src */ "./src/index.ts");
-var list_item_1 = __webpack_require__(/*! ./list-item */ "./examples/src/pages/list/list-item.tsx");
-exports.List = function () {
-    var _a = react_1.useState([
-        newItem(),
-        newItem(),
-        newItem(),
-    ]), items = _a[0], setItems = _a[1];
-    // const add = (ev: React.MouseEvent<HTMLButtonElement>) => {
-    //     const index = Number((ev.target as HTMLButtonElement).name);
-    //     setItems((list) =>
-    //         [...list.slice(0, index + 1), newItem(), ...list.slice(index + 1)]);
-    // };
-    var add = function (ev) {
-        var index = Number(ev.target.name);
-        if (items.length === 4) {
-            setItems(function (list) { return tslib_1.__spreadArrays(list.slice(0, 1), [
-                newItem()
-            ], list.slice(1, 2), [
-                newItem(),
-            ]); });
-        }
-        else {
-            setItems(function (list) {
-                return tslib_1.__spreadArrays(list.slice(0, index + 1), [newItem()], list.slice(index + 1));
-            });
-        }
-    };
-    var remove = function (ev) {
-        var index = Number(ev.target.name);
-        setItems(function (list) { return list.filter(function (_, i) { return i !== index; }); });
-    };
-    return (react_1.default.createElement(components_1.MainContainer, null,
-        react_1.default.createElement("div", { style: styles.list },
-            react_1.default.createElement(src_1.ComponentTransitionList, null, items.map(function (_a, index) {
-                var id = _a.id, color = _a.color;
-                return (react_1.default.createElement(list_item_1.ListItem, { key: id, index: index },
-                    react_1.default.createElement("div", { style: styles.listItem },
-                        react_1.default.createElement(components_1.Box, { color: color, size: components_1.Size.Small }, id),
-                        react_1.default.createElement("button", { type: "button", name: index.toString(), style: tslib_1.__assign(tslib_1.__assign({}, styles.button), styles.cross), onClick: remove }, "X"),
-                        react_1.default.createElement("div", { style: styles.plusContainer },
-                            react_1.default.createElement("button", { type: "button", name: index.toString(), style: tslib_1.__assign(tslib_1.__assign({}, styles.button), styles.plus), onClick: add }, "+")))));
-            })))));
-};
-// const newItem = () => ({ id: uniqid(), color: randomColor() });
-var newItem = function (id) {
-    if (id === void 0) { id = uniqid_1.default(); }
-    return ({ id: id, color: randomColor() });
-};
-var randomColor = function () { return colorsMap[randomInt(0, 4)]; };
-var randomInt = function (min, max) {
-    return min + Math.floor(((max + 1) - min) * Math.random());
-};
-var colorsMap = {
-    0: components_1.BoxColor.blueRed,
-    1: components_1.BoxColor.yellowGreen,
-    2: components_1.BoxColor.grayCyan,
-    3: components_1.BoxColor.cyanGray,
-    4: components_1.BoxColor.beigeBlue,
-};
-var styles = {
-    list: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
     },
     listItem: {
         position: "relative",
@@ -551,6 +470,70 @@ var styles = {
         borderColor: "red",
         borderRadius: "25%",
         fontSize: "smaller",
+    },
+};
+
+
+/***/ }),
+
+/***/ "./examples/src/pages/list/list.tsx":
+/*!******************************************!*\
+  !*** ./examples/src/pages/list/list.tsx ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.List = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var react_1 = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var uniqid_1 = tslib_1.__importDefault(__webpack_require__(/*! uniqid */ "./node_modules/uniqid/index.js"));
+var components_1 = __webpack_require__(/*! ../../components */ "./examples/src/components/index.ts");
+var src_1 = __webpack_require__(/*! ../../../../src */ "./src/index.ts");
+var list_item_1 = __webpack_require__(/*! ./list-item */ "./examples/src/pages/list/list-item.tsx");
+exports.List = function () {
+    var _a = react_1.useState([
+        newItem(),
+        newItem(),
+        newItem(),
+    ]), items = _a[0], setItems = _a[1];
+    var add = react_1.useCallback(function (index) {
+        setItems(function (list) {
+            return tslib_1.__spreadArrays(list.slice(0, index + 1), [newItem()], list.slice(index + 1));
+        });
+    }, []);
+    var remove = react_1.useCallback(function (index) {
+        setItems(function (list) { return list.filter(function (_, i) { return i !== index; }); });
+    }, []);
+    return (react_1.default.createElement(components_1.MainContainer, null,
+        react_1.default.createElement("div", { style: styles.list },
+            react_1.default.createElement(src_1.ComponentTransitionList, null, items.map(function (_a, index) {
+                var id = _a.id, color = _a.color;
+                return (react_1.default.createElement(list_item_1.ListItem, { key: id, index: index, onAdd: add, onRemove: remove, color: color }));
+            })))));
+};
+var newItem = function (id) {
+    if (id === void 0) { id = uniqid_1.default(); }
+    return ({ id: id, color: randomColor() });
+};
+var randomColor = function () { return colorsMap[randomInt(0, 4)]; };
+var randomInt = function (min, max) {
+    return min + Math.floor(((max + 1) - min) * Math.random());
+};
+var colorsMap = {
+    0: components_1.BoxColor.blueRed,
+    1: components_1.BoxColor.yellowGreen,
+    2: components_1.BoxColor.grayCyan,
+    3: components_1.BoxColor.cyanGray,
+    4: components_1.BoxColor.beigeBlue,
+};
+var styles = {
+    list: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
     },
 };
 
@@ -46135,23 +46118,37 @@ exports.ComponentTransitionList = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var react_1 = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var use_children_manager_1 = __webpack_require__(/*! ./use-children-manager */ "./src/component-transition-list/use-children-manager.ts");
-exports.ComponentTransitionList = function (props) {
-    var children = props.children;
-    var _a = react_1.useState(0), setCounter = _a[1];
+var transition_1 = __webpack_require__(/*! ../transition */ "./src/transition/index.ts");
+exports.ComponentTransitionList = function (_a) {
+    var children = _a.children;
+    var _b = react_1.useState(0), setCounter = _b[1];
+    var exitCounter = react_1.useRef(0);
     var mounted = react_1.useRef(false);
     react_1.useEffect(function () {
         mounted.current = true;
     }, []);
-    var _b = use_children_manager_1.useChildrenManager(children), childrenMapper = _b.childrenMapper, exitCounter = _b.exitCounter, internalKeys = _b.internalKeys, removeChild = _b.removeChild;
+    var _c = use_children_manager_1.useChildrenManager(children), childrenMapper = _c.childrenMapper, internalKeys = _c.internalKeys, exiting = _c.exitCounter, removeChild = _c.removeChild;
+    exitCounter.current = exiting;
     var onExitFinished = function (internalKey) {
+        var _a;
+        if (!((_a = childrenMapper[internalKey]) === null || _a === void 0 ? void 0 : _a.shouldExit)) {
+            return;
+        }
         removeChild(internalKey);
-        if (exitCounter === 0) {
+        exitCounter.current--;
+        if (exitCounter.current === 0) {
             setCounter(function (counterState) { return counterState + 1; });
         }
     };
     return (react_1.default.createElement(react_1.default.Fragment, null, internalKeys.map(function (internalKey) {
-        var _a = childrenMapper[internalKey], props = _a.props, type = _a.type, children = _a.children;
-        return react_1.default.createElement(type, tslib_1.__assign(tslib_1.__assign({}, props), { key: internalKey, animateOnMount: mounted.current || (props === null || props === void 0 ? void 0 : props.animateOnMount), onExitFinishedListCallback: onExitFinished, listId: internalKey }), children);
+        var _a = childrenMapper[internalKey], children = _a.children, shouldEnter = _a.shouldEnter, shouldExit = _a.shouldExit;
+        var context = {
+            contextId: internalKey,
+            onExitFinished: onExitFinished,
+            shouldEnter: mounted.current && shouldEnter,
+            shouldExit: shouldExit,
+        };
+        return (react_1.default.createElement(transition_1.TransitionContext.Provider, { key: internalKey, value: context }, children));
     })));
 };
 exports.ComponentTransitionList.displayName = "ComponentTransitionList";
@@ -46190,20 +46187,29 @@ exports.useChildrenManager = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var react_1 = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var uniqid_1 = tslib_1.__importDefault(__webpack_require__(/*! uniqid */ "./node_modules/uniqid/index.js"));
+/**
+ * Returns a new object in the format {[key]: internalKey}.
+ * @param keysMapper - The main internalKey/key mapper.
+ */
 var invertMapper = function (keysMapper) {
+    var _a, _b;
     var inverted = {};
-    for (var _i = 0, _a = Object.keys(keysMapper); _i < _a.length; _i++) {
-        var key = _a[_i];
-        if (keysMapper[key] !== null && keysMapper[key] !== undefined) {
-            inverted[keysMapper[key].childKey] = key;
+    for (var _i = 0, _c = Object.keys(keysMapper); _i < _c.length; _i++) {
+        var key = _c[_i];
+        var childKey = (_b = (_a = keysMapper[key]) === null || _a === void 0 ? void 0 : _a.children) === null || _b === void 0 ? void 0 : _b.key;
+        if (childKey) {
+            inverted[childKey] = key;
         }
     }
     return inverted;
 };
+/**
+ * Returns a 'ChildrenManagerOut' depending on the current children.
+ * @param children - The current children.
+ */
 exports.useChildrenManager = function (children) {
     var childrenMapper = react_1.useRef({});
     var internalKeys = react_1.useRef([]);
-    var exitCounter = react_1.useRef(0);
     if (!children) {
         return {
             childrenMapper: childrenMapper.current,
@@ -46226,39 +46232,35 @@ exports.useChildrenManager = function (children) {
         if (childKey !== undefined && childKey !== null && childInternalKey === undefined) {
             var newKey = uniqid_1.default();
             internalKeysUpdated.push(newKey);
-            childrenMapper.current[newKey] = getChildProps(child);
+            childrenMapper.current[newKey] = getTransitionChildren(child, true);
             childrenKeysAssert[childKey] = newKey;
             newChildrenIndexes.push(i);
         }
         else if (childInternalKey) {
             internalKeysUpdated.push(childInternalKey);
-            childrenMapper.current[childInternalKey] = getChildProps(child);
+            childrenMapper.current[childInternalKey] = getTransitionChildren(child);
             childrenKeysAssert[childKey] = childInternalKey;
         }
     });
-    exitCounter.current = 0;
+    var exitCounter = 0;
     var _loop_1 = function (i) {
         var exists = internalKeysUpdated.indexOf(internalKeys.current[i]) > -1;
-        if (!exists) {
-            var accumulator = newChildrenIndexes.filter(function (newIndex) { return newIndex <= i; }).length;
-            var index = i + accumulator;
-            internalKeysUpdated = tslib_1.__spreadArrays(internalKeysUpdated.slice(0, index), [
-                internalKeys.current[i]
-            ], internalKeysUpdated.slice(index));
-            childrenMapper.current[internalKeys.current[i]].children = null;
-            exitCounter.current++;
+        if (exists) {
+            return "continue";
         }
+        var accumulator = newChildrenIndexes.filter(function (newIndex) { return newIndex <= i; }).length;
+        var index = i + accumulator;
+        internalKeysUpdated = tslib_1.__spreadArrays(internalKeysUpdated.slice(0, index), [
+            internalKeys.current[i]
+        ], internalKeysUpdated.slice(index));
+        childrenMapper.current[internalKeys.current[i]].shouldExit = true;
+        exitCounter++;
     };
     for (var i = 0; i < internalKeys.current.length; i++) {
         _loop_1(i);
     }
     internalKeys.current = internalKeysUpdated;
     var removeChild = function (internalKey) {
-        var _a;
-        if ((_a = childrenMapper.current[internalKey]) === null || _a === void 0 ? void 0 : _a.children) {
-            return;
-        }
-        exitCounter.current--;
         delete childrenMapper.current[internalKey];
         internalKeys.current = internalKeys.current.filter(function (key) { return key !== internalKey; });
     };
@@ -46269,14 +46271,13 @@ exports.useChildrenManager = function (children) {
         removeChild: removeChild,
     };
 };
-var getChildProps = function (child) {
-    var _a = child.props, children = _a.children, props = tslib_1.__rest(_a, ["children"]);
-    return {
-        children: children,
-        childKey: child.key,
-        type: child === null || child === void 0 ? void 0 : child.type,
-        props: props,
-    };
+var getTransitionChildren = function (child, isNew) {
+    if (isNew === void 0) { isNew = false; }
+    return ({
+        children: child,
+        shouldEnter: isNew,
+        shouldExit: false,
+    });
 };
 var logError = function (message) {
     if (true) {
@@ -46874,11 +46875,13 @@ var replaceVariable = function (value, newValue, variable) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LazyTransition = exports.Transition = void 0;
+exports.TransitionContext = exports.LazyTransition = exports.Transition = void 0;
 var transition_1 = __webpack_require__(/*! ./transition */ "./src/transition/transition.tsx");
 Object.defineProperty(exports, "Transition", { enumerable: true, get: function () { return transition_1.Transition; } });
 var lazy_transition_1 = __webpack_require__(/*! ./lazy-transition */ "./src/transition/lazy-transition.tsx");
 Object.defineProperty(exports, "LazyTransition", { enumerable: true, get: function () { return lazy_transition_1.LazyTransition; } });
+var transition_context_1 = __webpack_require__(/*! ./transition-context */ "./src/transition/transition-context.ts");
+Object.defineProperty(exports, "TransitionContext", { enumerable: true, get: function () { return transition_context_1.TransitionContext; } });
 
 
 /***/ }),
@@ -46909,6 +46912,23 @@ exports.LazyTransition.displayName = "LazyTransition";
 
 /***/ }),
 
+/***/ "./src/transition/transition-context.ts":
+/*!**********************************************!*\
+  !*** ./src/transition/transition-context.ts ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.TransitionContext = void 0;
+var react_1 = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+exports.TransitionContext = react_1.createContext(null);
+
+
+/***/ }),
+
 /***/ "./src/transition/transition.tsx":
 /*!***************************************!*\
   !*** ./src/transition/transition.tsx ***!
@@ -46923,12 +46943,16 @@ exports.Transition = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var react_1 = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var classnames_1 = tslib_1.__importDefault(__webpack_require__(/*! classnames */ "./node_modules/classnames/index.js"));
-var defaults_1 = __webpack_require__(/*! ../animations/defaults */ "./src/animations/defaults.ts");
 var types_1 = __webpack_require__(/*! ./animation-hooks/types */ "./src/transition/animation-hooks/types.ts");
 var animation_hooks_1 = __webpack_require__(/*! ./animation-hooks */ "./src/transition/animation-hooks/index.ts");
+var transition_context_1 = __webpack_require__(/*! ./transition-context */ "./src/transition/transition-context.ts");
+var defaults_1 = __webpack_require__(/*! ../animations/defaults */ "./src/animations/defaults.ts");
 exports.Transition = function (_a) {
-    var animateContainer = _a.animateContainer, animateContainerDuration = _a.animateContainerDuration, animateContainerEasing = _a.animateContainerEasing, animateOnMount = _a.animateOnMount, children = _a.children, className = _a.className, classNameEnter = _a.classNameEnter, classNameExit = _a.classNameExit, disabled = _a.disabled, enterAnimation = _a.enterAnimation, exitAnimation = _a.exitAnimation, inViewRef = _a.inViewRef, listId = _a.listId, onEnterFinished = _a.onEnterFinished, onExitFinished = _a.onExitFinished, onExitFinishedListCallback = _a.onExitFinishedListCallback, style = _a.style;
+    var animateContainer = _a.animateContainer, animateContainerDuration = _a.animateContainerDuration, animateContainerEasing = _a.animateContainerEasing, animateOnMountProp = _a.animateOnMount, childrenProp = _a.children, className = _a.className, classNameEnter = _a.classNameEnter, classNameExit = _a.classNameExit, disabled = _a.disabled, enterAnimation = _a.enterAnimation, exitAnimation = _a.exitAnimation, inViewRef = _a.inViewRef, onEnterFinished = _a.onEnterFinished, onExitFinished = _a.onExitFinished, style = _a.style;
     var _b = react_1.useState(null), transitionState = _b[0], setTransitionState = _b[1];
+    var context = react_1.useContext(transition_context_1.TransitionContext);
+    var children = (context === null || context === void 0 ? void 0 : context.shouldExit) ? null : childrenProp;
+    var animateOnMount = (context === null || context === void 0 ? void 0 : context.shouldEnter) || animateOnMountProp;
     var prevChildren = react_1.useRef(animateOnMount ? null : children);
     var containerRef = react_1.useRef(null);
     var unmounted = react_1.useRef(false);
@@ -46960,12 +46984,18 @@ exports.Transition = function (_a) {
         onFinish: null,
     };
     var _c = animation_hooks_1.useContainerRectangle(tslib_1.__assign(tslib_1.__assign({}, animationHooks), { onFinish: function () { return udpatedState(types_1.TransitionState.Container); } })), nextClientRect = _c.nextClientRect, prevClientRect = _c.prevClientRect;
+    var exitFinishedHandler = function () {
+        onExitFinished && onExitFinished();
+        // listId && onExitFinishedListCallback && onExitFinishedListCallback(listId);
+        if ((context === null || context === void 0 ? void 0 : context.contextId) && (context === null || context === void 0 ? void 0 : context.onExitFinished)) {
+            context.onExitFinished(context.contextId);
+        }
+    };
     animation_hooks_1.useExitAnimation(tslib_1.__assign(tslib_1.__assign({}, animationHooks), { prevClientRect: prevClientRect, settings: exitAnimation, onFinish: function () {
             var hadPrevChildren = !!prevChildren.current;
             prevChildren.current = children;
             if (hadPrevChildren && prevChildren.current) {
-                onExitFinished && onExitFinished();
-                listId && onExitFinishedListCallback && onExitFinishedListCallback(listId);
+                exitFinishedHandler();
             }
             udpatedState(types_1.TransitionState.ContainerRect);
         } }));
@@ -46975,8 +47005,7 @@ exports.Transition = function (_a) {
         animateContainerDuration: animateContainerDuration,
         animateContainerEasing: animateContainerEasing, onFinish: function () {
             if (!prevChildren.current) {
-                onExitFinished && onExitFinished();
-                listId && onExitFinishedListCallback && onExitFinishedListCallback(listId);
+                exitFinishedHandler();
             }
             udpatedState(types_1.TransitionState.Enter);
         } }));

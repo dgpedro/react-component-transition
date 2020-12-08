@@ -1,33 +1,33 @@
-import React, { Key, PropsWithChildren, useRef } from "react";
+import React, { Key, useRef } from "react";
 import uniqid from "uniqid";
 
-import { TransitionProps } from "../transition";
+import { ChildrenManagerOut, ChildrenMapper, TransitionChildren } from "./types";
 
-export interface ChildProps {
-    children: React.ReactNode,
-    childKey: Key;
-    type: React.ComponentType<TransitionProps>,
-    props: TransitionProps,
-}
-
-interface ChildMapper extends Record<string, ChildProps> { }
-
-const invertMapper = (keysMapper: ChildMapper) => {
+/**
+ * Returns a new object in the format {[key]: internalKey}.
+ * @param keysMapper - The main internalKey/key mapper.
+ */
+const invertMapper = (keysMapper: ChildrenMapper) => {
     const inverted: Record<string, string> = {};
     for (const key of Object.keys(keysMapper)) {
-        if (keysMapper[key] !== null && keysMapper[key] !== undefined) {
-            inverted[keysMapper[key].childKey] = key;
+        const childKey = keysMapper[key]?.children?.key;
+        if (childKey) {
+            inverted[childKey] = key;
         }
     }
 
     return inverted;
 };
 
+/**
+ * Returns a 'ChildrenManagerOut' depending on the current children.
+ * @param children - The current children.
+ */
 export const useChildrenManager = (
-    children: React.ReactElement<PropsWithChildren<TransitionProps>>[],
-) => {
+    children: React.ReactElement[],
+): ChildrenManagerOut => {
 
-    const childrenMapper = useRef<ChildMapper>({});
+    const childrenMapper = useRef<ChildrenMapper>({});
     const internalKeys = useRef<string[]>([]);
 
     if (!children) {
@@ -57,12 +57,12 @@ export const useChildrenManager = (
         if (childKey !== undefined && childKey !== null && childInternalKey === undefined) {
             const newKey = uniqid();
             internalKeysUpdated.push(newKey);
-            childrenMapper.current[newKey] = getChildProps(child);
+            childrenMapper.current[newKey] = getTransitionChildren(child, true);
             childrenKeysAssert[childKey] = newKey;
             newChildrenIndexes.push(i);
         } else if (childInternalKey) {
             internalKeysUpdated.push(childInternalKey);
-            childrenMapper.current[childInternalKey] = getChildProps(child);
+            childrenMapper.current[childInternalKey] = getTransitionChildren(child);
             childrenKeysAssert[childKey] = childInternalKey;
         }
     });
@@ -84,7 +84,7 @@ export const useChildrenManager = (
             internalKeys.current[i],
             ...internalKeysUpdated.slice(index)
         ];
-        childrenMapper.current[internalKeys.current[i]].children = null;
+        childrenMapper.current[internalKeys.current[i]].shouldExit = true;
         exitCounter++;
     }
 
@@ -103,19 +103,13 @@ export const useChildrenManager = (
     };
 }
 
-const getChildProps = (
-    child: React.ReactElement<PropsWithChildren<TransitionProps>>
-): ChildProps => {
-
-    const { children, ...props } = child.props;
-
-    return {
-        children,
-        childKey: child.key,
-        type: child?.type as React.ComponentType<TransitionProps>,
-        props,
-    };
-};
+const getTransitionChildren = (child: React.ReactElement, isNew = false): TransitionChildren => (
+    {
+        children: child,
+        shouldEnter: isNew,
+        shouldExit: false,
+    }
+);
 
 const logError = (message: string) => {
     if (process.env.NODE_ENV === "development") {

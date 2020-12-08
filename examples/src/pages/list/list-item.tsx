@@ -1,24 +1,48 @@
 import React from "react";
 
-import { ComponentTransition, ComponentTransitionProps, AnimationTypes, AnimationSettings } from "../../../../src";
+import { ComponentTransition, AnimationTypes, AnimationSettings } from "../../../../src";
+import { Box, BoxColor, Size } from "../../components";
 
-interface Props extends ComponentTransitionProps {
+interface Props {
     index: number;
+    color: BoxColor;
+    onAdd: (index: number) => void;
+    onRemove: (index: number) => void;
 }
 
-export const ListItem: React.FC<Props> = React.memo(({ index, ...props }) => {
-
-    console.log(`======================= RENDER ${index} =============================`);
-
+export const ListItem: React.FC<Props> = React.memo(({
+    index,
+    color,
+    onAdd,
+    onRemove,
+}) => {
     return (
-        <div style={styles.listItem}>
+        <div style={styles.listItemContainer}>
             <ComponentTransition
                 animateContainer={true}
                 enterAnimation={enterAnimation}
                 exitAnimation={index % 2 === 0 ? exitLeft : exitRight}
                 style={styles.transition}
-                {...props}
-            />
+            >
+                <div style={styles.listItem}>
+                    <Box
+                        color={color}
+                        size={Size.Small}
+                    />
+                    <button
+                        type="button"
+                        style={{ ...styles.button, ...styles.cross }}
+                        onClick={onRemove.bind(null, index)}
+                    >X</button>
+                    <div style={styles.plusContainer}>
+                        <button
+                            type="button"
+                            style={{ ...styles.button, ...styles.plus }}
+                            onClick={onAdd.bind(null, index)}
+                        >+</button>
+                    </div>
+                </div>
+            </ComponentTransition>
         </div>
     );
 });
@@ -64,12 +88,45 @@ const exitRight: AnimationSettings[] = [
 ];
 
 const styles: { [index: string]: React.CSSProperties } = {
-    listItem: {
+    listItemContainer: {
         width: "300px",
         overflow: "hidden",
     },
     transition: {
         width: "100px",
         margin: "auto",
+    },
+    listItem: {
+        position: "relative",
+        padding: "5px 0",
+    },
+    button: {
+        fontWeight: "bold",
+        backgroundColor: "white",
+        border: "1px solid",
+        cursor: "pointer",
+        lineHeight: "10px",
+        padding: "2px 4px",
+        fontFamily: "cursive",
+    },
+    plusContainer: {
+        width: "100%",
+        position: "absolute",
+        bottom: "8px",
+        textAlign: "center",
+    },
+    plus: {
+        color: "green",
+        borderColor: "green",
+        width: "70%",
+    },
+    cross: {
+        position: "absolute",
+        top: "10px",
+        right: "5px",
+        color: "red",
+        borderColor: "red",
+        borderRadius: "25%",
+        fontSize: "smaller",
     },
 }
