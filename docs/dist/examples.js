@@ -263,6 +263,7 @@ var mainStyles = {
         borderRadius: "10px",
         boxShadow: "0 -5px 5px #ccc",
         margin: "20px 0",
+        overflow: "hidden",
     },
 };
 
@@ -353,26 +354,27 @@ var styles = {
 
 /***/ }),
 
-/***/ "./examples/src/pages/list/index.ts":
-/*!******************************************!*\
-  !*** ./examples/src/pages/list/index.ts ***!
-  \******************************************/
+/***/ "./examples/src/pages/list/custom/index.ts":
+/*!*************************************************!*\
+  !*** ./examples/src/pages/list/custom/index.ts ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
-tslib_1.__exportStar(__webpack_require__(/*! ./list */ "./examples/src/pages/list/list.tsx"), exports);
+exports.List = void 0;
+var list_1 = __webpack_require__(/*! ./list */ "./examples/src/pages/list/custom/list.tsx");
+Object.defineProperty(exports, "List", { enumerable: true, get: function () { return list_1.List; } });
 
 
 /***/ }),
 
-/***/ "./examples/src/pages/list/list-item.tsx":
-/*!***********************************************!*\
-  !*** ./examples/src/pages/list/list-item.tsx ***!
-  \***********************************************/
+/***/ "./examples/src/pages/list/custom/list-item.tsx":
+/*!******************************************************!*\
+  !*** ./examples/src/pages/list/custom/list-item.tsx ***!
+  \******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -382,15 +384,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ListItem = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var react_1 = tslib_1.__importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var src_1 = __webpack_require__(/*! ../../../../src */ "./src/index.ts");
-var components_1 = __webpack_require__(/*! ../../components */ "./examples/src/components/index.ts");
+var src_1 = __webpack_require__(/*! ../../../../../src */ "./src/index.ts");
+var presets_1 = __webpack_require__(/*! ../../../../../src/presets */ "./src/presets/index.ts");
+var components_1 = __webpack_require__(/*! ../../../components */ "./examples/src/components/index.ts");
 exports.ListItem = react_1.default.memo(function (_a) {
-    var index = _a.index, color = _a.color, onAdd = _a.onAdd, onRemove = _a.onRemove;
+    var index = _a.index, color = _a.color, onAdd = _a.onAdd, onRemove = _a.onRemove, canRemove = _a.canRemove;
     return (react_1.default.createElement("div", { style: styles.listItemContainer },
         react_1.default.createElement(src_1.ComponentTransition, { animateContainer: true, enterAnimation: enterAnimation, exitAnimation: index % 2 === 0 ? exitLeft : exitRight, style: styles.transition },
             react_1.default.createElement("div", { style: styles.listItem },
                 react_1.default.createElement(components_1.Box, { color: color, size: components_1.Size.Small }),
-                react_1.default.createElement("button", { type: "button", style: tslib_1.__assign(tslib_1.__assign({}, styles.button), styles.cross), onClick: onRemove.bind(null, index) }, "X"),
+                react_1.default.createElement(presets_1.TransitionScale, { style: styles.crossContainer }, canRemove && (react_1.default.createElement("button", { type: "button", style: tslib_1.__assign(tslib_1.__assign({}, styles.button), styles.cross), onClick: onRemove.bind(null, index) }, "X"))),
                 react_1.default.createElement("div", { style: styles.plusContainer },
                     react_1.default.createElement("button", { type: "button", style: tslib_1.__assign(tslib_1.__assign({}, styles.button), styles.plus), onClick: onAdd.bind(null, index) }, "+"))))));
 });
@@ -462,10 +465,12 @@ var styles = {
         borderColor: "green",
         width: "70%",
     },
-    cross: {
+    crossContainer: {
         position: "absolute",
         top: "10px",
         right: "5px",
+    },
+    cross: {
         color: "red",
         borderColor: "red",
         borderRadius: "25%",
@@ -476,10 +481,10 @@ var styles = {
 
 /***/ }),
 
-/***/ "./examples/src/pages/list/list.tsx":
-/*!******************************************!*\
-  !*** ./examples/src/pages/list/list.tsx ***!
-  \******************************************/
+/***/ "./examples/src/pages/list/custom/list.tsx":
+/*!*************************************************!*\
+  !*** ./examples/src/pages/list/custom/list.tsx ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -490,9 +495,9 @@ exports.List = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var react_1 = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var uniqid_1 = tslib_1.__importDefault(__webpack_require__(/*! uniqid */ "./node_modules/uniqid/index.js"));
-var components_1 = __webpack_require__(/*! ../../components */ "./examples/src/components/index.ts");
-var src_1 = __webpack_require__(/*! ../../../../src */ "./src/index.ts");
-var list_item_1 = __webpack_require__(/*! ./list-item */ "./examples/src/pages/list/list-item.tsx");
+var components_1 = __webpack_require__(/*! ../../../components */ "./examples/src/components/index.ts");
+var src_1 = __webpack_require__(/*! ../../../../../src */ "./src/index.ts");
+var list_item_1 = __webpack_require__(/*! ./list-item */ "./examples/src/pages/list/custom/list-item.tsx");
 exports.List = function () {
     var _a = react_1.useState([
         newItem(),
@@ -505,14 +510,18 @@ exports.List = function () {
         });
     }, []);
     var remove = react_1.useCallback(function (index) {
-        setItems(function (list) { return list.filter(function (_, i) { return i !== index; }); });
+        setItems(function (list) {
+            if (list.length <= 1) {
+                return list;
+            }
+            return list.filter(function (_, i) { return i !== index; });
+        });
     }, []);
-    return (react_1.default.createElement(components_1.MainContainer, null,
-        react_1.default.createElement("div", { style: styles.list },
-            react_1.default.createElement(src_1.ComponentTransitionList, null, items.map(function (_a, index) {
-                var id = _a.id, color = _a.color;
-                return (react_1.default.createElement(list_item_1.ListItem, { key: id, index: index, onAdd: add, onRemove: remove, color: color }));
-            })))));
+    return (react_1.default.createElement("div", { style: styles.list },
+        react_1.default.createElement(src_1.ComponentTransitionList, null, items.map(function (_a, index) {
+            var id = _a.id, color = _a.color;
+            return (react_1.default.createElement(list_item_1.ListItem, { key: id, index: index, onAdd: add, onRemove: remove, color: color, canRemove: items.length > 1 }));
+        }))));
 };
 var newItem = function (id) {
     if (id === void 0) { id = uniqid_1.default(); }
@@ -534,6 +543,157 @@ var styles = {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+    },
+};
+
+
+/***/ }),
+
+/***/ "./examples/src/pages/list/index.ts":
+/*!******************************************!*\
+  !*** ./examples/src/pages/list/index.ts ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+tslib_1.__exportStar(__webpack_require__(/*! ./list */ "./examples/src/pages/list/list.tsx"), exports);
+
+
+/***/ }),
+
+/***/ "./examples/src/pages/list/list.tsx":
+/*!******************************************!*\
+  !*** ./examples/src/pages/list/list.tsx ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.List = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var react_1 = tslib_1.__importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var components_1 = __webpack_require__(/*! ../../components */ "./examples/src/components/index.ts");
+var simple_1 = __webpack_require__(/*! ./simple */ "./examples/src/pages/list/simple/index.ts");
+var custom_1 = __webpack_require__(/*! ./custom */ "./examples/src/pages/list/custom/index.ts");
+exports.List = function () {
+    return (react_1.default.createElement(react_1.default.Fragment, null,
+        react_1.default.createElement(components_1.MainContainer, null,
+            react_1.default.createElement(simple_1.List, null)),
+        react_1.default.createElement(components_1.MainContainer, null,
+            react_1.default.createElement(custom_1.List, null))));
+};
+
+
+/***/ }),
+
+/***/ "./examples/src/pages/list/simple/index.ts":
+/*!*************************************************!*\
+  !*** ./examples/src/pages/list/simple/index.ts ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.List = void 0;
+var list_1 = __webpack_require__(/*! ./list */ "./examples/src/pages/list/simple/list.tsx");
+Object.defineProperty(exports, "List", { enumerable: true, get: function () { return list_1.List; } });
+
+
+/***/ }),
+
+/***/ "./examples/src/pages/list/simple/list.tsx":
+/*!*************************************************!*\
+  !*** ./examples/src/pages/list/simple/list.tsx ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.List = void 0;
+var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
+var react_1 = tslib_1.__importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var components_1 = __webpack_require__(/*! ../../../components */ "./examples/src/components/index.ts");
+var src_1 = __webpack_require__(/*! ../../../../../src */ "./src/index.ts");
+var presets_1 = __webpack_require__(/*! ../../../../../src/presets */ "./src/presets/index.ts");
+exports.List = function () {
+    var _a = react_1.useState([randomColor()]), items = _a[0], setItems = _a[1];
+    var add = function () {
+        setItems(function (list) { return tslib_1.__spreadArrays(list, [randomColor()]); });
+    };
+    var remove = function () {
+        setItems(function (list) {
+            if (list.length <= 1) {
+                return list;
+            }
+            return tslib_1.__spreadArrays(list.slice(0, list.length - 1));
+        });
+    };
+    return (react_1.default.createElement("div", null,
+        react_1.default.createElement("div", { style: styles.buttonsContainer },
+            react_1.default.createElement("div", { style: styles.buttonDelete },
+                react_1.default.createElement(src_1.ComponentTransition, { enterAnimation: tslib_1.__assign(tslib_1.__assign({}, src_1.AnimationTypes.slideUp.enter), { keyframes: { transform: ["translateY(-80px)", "translateY(0)"] } }), exitAnimation: tslib_1.__assign(tslib_1.__assign({}, src_1.AnimationTypes.slideUp.exit), { keyframes: { transform: ["translateY(0)", "translateY(-80px)"] } }) }, items.length > 1 && (react_1.default.createElement("button", { type: "button", style: tslib_1.__assign(tslib_1.__assign({}, styles.button), styles.removeButton), onClick: remove }, "X")))),
+            react_1.default.createElement("div", { style: styles.buttonAdd },
+                react_1.default.createElement("button", { type: "button", style: tslib_1.__assign(tslib_1.__assign({}, styles.button), styles.addButton), onClick: add }, "+"))),
+        react_1.default.createElement(src_1.ComponentTransitionList, null, items.map(function (color, index) { return (react_1.default.createElement(presets_1.TransitionFade, { key: index },
+            react_1.default.createElement("div", { style: styles.boxContainer },
+                react_1.default.createElement(components_1.Box, { color: color, size: components_1.Size.Small })))); }))));
+};
+var randomColor = function () { return colorsMap[randomInt(0, 4)]; };
+var randomInt = function (min, max) {
+    return min + Math.floor(((max + 1) - min) * Math.random());
+};
+var colorsMap = {
+    0: components_1.BoxColor.blueRed,
+    1: components_1.BoxColor.yellowGreen,
+    2: components_1.BoxColor.grayCyan,
+    3: components_1.BoxColor.cyanGray,
+    4: components_1.BoxColor.beigeBlue,
+};
+var styles = {
+    boxContainer: {
+        margin: "10px 0",
+    },
+    buttonsContainer: {
+        display: "flex",
+        width: "100%,"
+    },
+    buttonDelete: {
+        width: "50%",
+        textAlign: "right",
+    },
+    buttonAdd: {
+        width: "50%",
+        textAlign: "left",
+    },
+    button: {
+        fontWeight: "bold",
+        backgroundColor: "white",
+        border: "1px solid",
+        cursor: "pointer",
+        lineHeight: "10px",
+        padding: "2px 4px",
+        fontFamily: "cursive",
+        width: "50px",
+        margin: "10px",
+    },
+    addButton: {
+        color: "green",
+        borderColor: "green",
+    },
+    removeButton: {
+        color: "red",
+        borderColor: "red",
+        fontSize: "smaller",
     },
 };
 

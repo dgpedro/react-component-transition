@@ -15,5 +15,6 @@ const mainStyles: {[index: string]: React.CSSProperties} = {
         borderRadius: "10px",
         boxShadow: "0 -5px 5px #ccc",
         margin: "20px 0",
+        overflow: "hidden",
     },
 };
