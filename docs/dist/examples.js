@@ -46986,7 +46986,6 @@ exports.Transition = function (_a) {
     var _c = animation_hooks_1.useContainerRectangle(tslib_1.__assign(tslib_1.__assign({}, animationHooks), { onFinish: function () { return udpatedState(types_1.TransitionState.Container); } })), nextClientRect = _c.nextClientRect, prevClientRect = _c.prevClientRect;
     var exitFinishedHandler = function () {
         onExitFinished && onExitFinished();
-        // listId && onExitFinishedListCallback && onExitFinishedListCallback(listId);
         if ((context === null || context === void 0 ? void 0 : context.contextId) && (context === null || context === void 0 ? void 0 : context.onExitFinished)) {
             context.onExitFinished(context.contextId);
         }
@@ -47024,9 +47023,15 @@ exports.Transition = function (_a) {
     if (!hasChildrenChanged && !transitionState && !children) {
         return null;
     }
-    return (react_1.default.createElement("div", { ref: setRefs, className: classnames_1.default(className, transitionState === types_1.TransitionState.Enter && classNameEnter, transitionState === types_1.TransitionState.Exit && classNameExit) || null, style: tslib_1.__assign(tslib_1.__assign({}, style), { opacity: hideContent ? 0 : null }) }, shouldRenderPrevChildren ?
-        prevChildren.current :
-        children));
+    return (
+    // Reset context to avoid misbehavior of ComponentTransitionList 
+    // when children contains another ComponentTranstion/Preset.
+    // In next major release, should exist a ComponentTransitionListItem that
+    // should handle the context.
+    react_1.default.createElement(transition_context_1.TransitionContext.Provider, { value: null },
+        react_1.default.createElement("div", { ref: setRefs, className: classnames_1.default(className, transitionState === types_1.TransitionState.Enter && classNameEnter, transitionState === types_1.TransitionState.Exit && classNameExit) || null, style: tslib_1.__assign(tslib_1.__assign({}, style), { opacity: hideContent ? 0 : null }) }, shouldRenderPrevChildren ?
+            prevChildren.current :
+            children)));
 };
 var didChildrenChanged = function (prevChildren, children) {
     var prevChildrenElement = prevChildren;

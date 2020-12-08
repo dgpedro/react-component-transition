@@ -88,7 +88,6 @@ export const Transition: React.FC<Props> = ({
 
     const exitFinishedHandler = () => {
         onExitFinished && onExitFinished();
-        // listId && onExitFinishedListCallback && onExitFinishedListCallback(listId);
         if (context?.contextId && context?.onExitFinished) {
             context.onExitFinished(context.contextId);
         }
@@ -151,25 +150,31 @@ export const Transition: React.FC<Props> = ({
     }
 
     return (
-        <div
-            ref={setRefs}
-            className={
-                classnames(
-                    className,
-                    transitionState === TransitionState.Enter && classNameEnter,
-                    transitionState === TransitionState.Exit && classNameExit,
-                ) || null}
-            style={{
-                ...style,
-                opacity: hideContent ? 0 : null,
-            }}
-        >
-            {
-                shouldRenderPrevChildren ?
-                    prevChildren.current :
-                    children
-            }
-        </div>
+        // Reset context to avoid misbehavior of ComponentTransitionList 
+        // when children contains another ComponentTranstion/Preset.
+        // In next major release, should exist a ComponentTransitionListItem that
+        // should handle the context.
+        <TransitionContext.Provider value={null}>
+            <div
+                ref={setRefs}
+                className={
+                    classnames(
+                        className,
+                        transitionState === TransitionState.Enter && classNameEnter,
+                        transitionState === TransitionState.Exit && classNameExit,
+                    ) || null}
+                style={{
+                    ...style,
+                    opacity: hideContent ? 0 : null,
+                }}
+            >
+                {
+                    shouldRenderPrevChildren ?
+                        prevChildren.current :
+                        children
+                }
+            </div>
+        </TransitionContext.Provider>
     );
 };
 
