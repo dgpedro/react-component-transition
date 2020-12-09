@@ -96,26 +96,36 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.App = void 0;
+exports.AppMobile = exports.AppDesktop = exports.App = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var react_1 = tslib_1.__importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+var react_media_1 = tslib_1.__importDefault(__webpack_require__(/*! react-media */ "./node_modules/react-media/esm/react-media.js"));
 var src_1 = __webpack_require__(/*! ../../src */ "./src/index.ts");
 var menu_1 = __webpack_require__(/*! ./menu */ "./examples/src/menu.tsx");
 var show_hide_1 = __webpack_require__(/*! ./pages/show-hide */ "./examples/src/pages/show-hide/index.ts");
 var transition_1 = __webpack_require__(/*! ./pages/transition */ "./examples/src/pages/transition/index.ts");
 var list_1 = __webpack_require__(/*! ./pages/list */ "./examples/src/pages/list/index.ts");
-exports.App = function () { return (react_1.default.createElement(react_router_dom_1.BrowserRouter, { basename: "react-component-transition" },
+exports.App = function () {
+    return (react_1.default.createElement(react_router_dom_1.BrowserRouter, { basename: "react-component-transition" },
+        react_1.default.createElement(react_media_1.default, { query: "(min-width: 600px)", render: function () { return react_1.default.createElement(exports.AppDesktop, null); } }),
+        react_1.default.createElement(react_media_1.default, { query: "(max-width: 599px)", render: function () { return react_1.default.createElement(exports.AppMobile, null); } })));
+};
+exports.AppDesktop = function () { return (react_1.default.createElement("div", { style: styles.app },
     react_1.default.createElement("div", { style: styles.main },
-        react_1.default.createElement("div", { style: styles.table },
-            react_1.default.createElement("div", { style: styles.menu },
-                react_1.default.createElement(menu_1.Menu, null)),
-            react_1.default.createElement("div", { style: styles.routes },
-                react_1.default.createElement(AppRoutes, null)))))); };
-var AppRoutes = function () {
+        react_1.default.createElement(menu_1.Menu, null),
+        react_1.default.createElement("div", { style: styles.mainPanel },
+            react_1.default.createElement(AppRoutes, { isMobile: false }))))); };
+exports.AppMobile = function () { return (react_1.default.createElement("div", { style: stylesMobile.app },
+    react_1.default.createElement("div", { style: stylesMobile.main },
+        react_1.default.createElement(menu_1.Menu, null),
+        react_1.default.createElement("div", { style: stylesMobile.mainPanel },
+            react_1.default.createElement(AppRoutes, { isMobile: true }))))); };
+var AppRoutes = function (_a) {
+    var isMobile = _a.isMobile;
     var location = react_router_dom_1.useLocation();
-    return (react_1.default.createElement(src_1.ComponentTransition, { enterAnimation: src_1.AnimationTypes.slideUp.enter, exitAnimation: src_1.AnimationTypes.slideDown.exit, animateContainer: true },
-        react_1.default.createElement("div", { key: location.key, style: styles.content },
+    return (react_1.default.createElement(src_1.ComponentTransition, { enterAnimation: isMobile ? src_1.AnimationTypes.slideLeft.enter : src_1.AnimationTypes.slideUp.enter, exitAnimation: isMobile ? src_1.AnimationTypes.slideRight.exit : src_1.AnimationTypes.slideDown.exit, animateContainer: true },
+        react_1.default.createElement("div", { key: location.key, style: isMobile ? stylesMobile.content : styles.content },
             react_1.default.createElement(react_router_dom_1.Switch, { location: location },
                 react_1.default.createElement(react_router_dom_1.Route, { path: "/show-hide", component: show_hide_1.ShowHide }),
                 react_1.default.createElement(react_router_dom_1.Route, { path: "/transition", component: transition_1.Transition }),
@@ -123,30 +133,27 @@ var AppRoutes = function () {
                 react_1.default.createElement(react_router_dom_1.Redirect, { to: '/show-hide' })))));
 };
 var styles = {
-    main: {
-        display: "flex",
-        height: "100%",
+    app: {
+        padding: "20px",
     },
-    table: {
+    main: {
         display: "flex",
         width: "80%",
         margin: "auto",
-        backgroundColor: "lavender",
-        boxShadow: "grey 2px 2px 10px",
     },
-    menu: {
-        padding: "30px 50px",
+    content: {
+        padding: "10px 30px",
     },
-    routes: {
+    mainPanel: {
         overflow: "hidden",
         flexGrow: 1,
         alignSelf: "center",
         justifyContent: "center",
+        backgroundColor: "lavender",
+        boxShadow: "grey -2px 2px 10px",
     },
-    content: {
-        padding: "10px 30px",
-    }
 };
+var stylesMobile = tslib_1.__assign(tslib_1.__assign({}, styles), { app: tslib_1.__assign(tslib_1.__assign({}, styles.app), { padding: "20px 0" }), main: tslib_1.__assign(tslib_1.__assign({}, styles.main), { flexDirection: "column", width: "100%" }), content: tslib_1.__assign(tslib_1.__assign({}, styles.content), { padding: "10px" }), mainPanel: tslib_1.__assign(tslib_1.__assign({}, styles.mainPanel), { width: "100%" }) });
 
 
 /***/ }),
@@ -252,19 +259,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MainContainer = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var react_1 = tslib_1.__importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_media_1 = tslib_1.__importDefault(__webpack_require__(/*! react-media */ "./node_modules/react-media/esm/react-media.js"));
 exports.MainContainer = function (_a) {
     var children = _a.children;
-    return (react_1.default.createElement("main", { style: mainStyles.main }, children));
+    return (react_1.default.createElement(react_media_1.default, { query: { maxWidth: 599 } }, function (matches) { return (react_1.default.createElement("main", { style: matches ? mobileStyles.main : styles.main }, children)); }));
 };
-var mainStyles = {
+var styles = {
     main: {
         backgroundColor: "#fff",
         padding: "50px 30px",
         borderRadius: "10px",
-        boxShadow: "0 -5px 5px #ccc",
+        boxShadow: "inset rgb(204, 204, 204) 0px 0px 5px 2px",
         margin: "20px 0",
         overflow: "hidden",
     },
+};
+var mobileStyles = {
+    main: tslib_1.__assign(tslib_1.__assign({}, styles.main), { padding: "20px 15px" }),
 };
 
 
@@ -303,22 +314,37 @@ exports.MenuItem = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var react_1 = tslib_1.__importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var react_router_dom_1 = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+var react_media_1 = tslib_1.__importDefault(__webpack_require__(/*! react-media */ "./node_modules/react-media/esm/react-media.js"));
 exports.MenuItem = function (props) {
-    return (react_1.default.createElement("li", { style: styles.item },
-        react_1.default.createElement(react_router_dom_1.NavLink, tslib_1.__assign({}, props, { style: styles.link, activeStyle: { textDecoration: "underline" } }),
-            react_1.default.createElement("span", { style: styles.linkText }, props.children))));
+    return (react_1.default.createElement(react_media_1.default, { query: { maxWidth: 599 } }, function (matches) { return (react_1.default.createElement("li", { style: matches ? stylesMobile.item : styles.item },
+        react_1.default.createElement(react_router_dom_1.NavLink, tslib_1.__assign({}, props, { style: matches ? stylesMobile.link : styles.link, activeStyle: matches ? stylesMobile.linkActive : styles.linkActive }),
+            react_1.default.createElement("span", { style: styles.linkText }, props.children)))); }));
 };
 var styles = {
     item: {
-        padding: "5px 0",
+        overflow: "hidden",
+        transform: "translate3d(0, -10px, 0)",
+        textAlign: "center",
     },
     link: {
+        display: "block",
+        width: "100px",
         textDecoration: "none",
+        padding: "30px 10px",
+        margin: "10px 0 10px 10px",
+    },
+    linkActive: {
+        backgroundColor: "lavender",
+        boxShadow: "grey -2px 2px 10px",
+        borderRadius: "5px",
+        borderTopRightRadius: "0",
+        borderBottomRightRadius: "0",
     },
     linkText: {
         color: "royalblue",
     },
 };
+var stylesMobile = tslib_1.__assign(tslib_1.__assign({}, styles), { item: tslib_1.__assign(tslib_1.__assign({}, styles.item), { transform: "translate3d(0, 0, 0)", width: "calc(100% / 3)" }), link: tslib_1.__assign(tslib_1.__assign({}, styles.link), { width: "auto", textDecoration: "none", padding: "15px 0", margin: "10px 10px 0 10px" }), linkActive: tslib_1.__assign(tslib_1.__assign({}, styles.linkActive), { borderBottomLeftRadius: "0", borderBottomRightRadius: "0" }) });
 
 
 /***/ }),
@@ -336,12 +362,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Menu = void 0;
 var tslib_1 = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 var react_1 = tslib_1.__importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_media_1 = tslib_1.__importDefault(__webpack_require__(/*! react-media */ "./node_modules/react-media/esm/react-media.js"));
 var menu_link_1 = __webpack_require__(/*! ./menu-link */ "./examples/src/menu-link.tsx");
 exports.Menu = function () {
-    return (react_1.default.createElement("ul", { style: styles.list },
+    return (react_1.default.createElement(react_media_1.default, { query: { maxWidth: 599 } }, function (matches) { return (react_1.default.createElement("ul", { style: matches ? stylesMobile.list : styles.list },
         react_1.default.createElement(menu_link_1.MenuItem, { to: "/show-hide" }, "Show/hide"),
         react_1.default.createElement(menu_link_1.MenuItem, { to: "/transition" }, "Transition"),
-        react_1.default.createElement(menu_link_1.MenuItem, { to: "/list" }, "List")));
+        react_1.default.createElement(menu_link_1.MenuItem, { to: "/list" }, "List"))); }));
 };
 var styles = {
     list: {
@@ -349,6 +376,9 @@ var styles = {
         padding: "0",
         margin: "0",
     }
+};
+var stylesMobile = {
+    list: tslib_1.__assign(tslib_1.__assign({}, styles.list), { display: "flex" })
 };
 
 
@@ -1026,6 +1056,53 @@ exports.Transition = function () {
             react_1.default.createElement(rotate_1.Rotate, null))));
 };
 
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _assertThisInitialized; });
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _defineProperty; });
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
 
 /***/ }),
 
@@ -3319,6 +3396,67 @@ exports.XmlEntities = XmlEntities;
 
 /***/ }),
 
+/***/ "./node_modules/invariant/browser.js":
+/*!*******************************************!*\
+  !*** ./node_modules/invariant/browser.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/**
+ * Copyright (c) 2013-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+/**
+ * Use invariant() to assert state which your program assumes to be true.
+ *
+ * Provide sprintf-style format (only %s is supported) and arguments
+ * to provide information about what broke and what you were
+ * expecting.
+ *
+ * The invariant message will be stripped in production, but the invariant
+ * will remain to ensure logic does not differ in production.
+ */
+
+var invariant = function(condition, format, a, b, c, d, e, f) {
+  if (true) {
+    if (format === undefined) {
+      throw new Error('invariant requires an error message argument');
+    }
+  }
+
+  if (!condition) {
+    var error;
+    if (format === undefined) {
+      error = new Error(
+        'Minified exception occurred; use the non-minified dev environment ' +
+        'for the full error message and additional helpful warnings.'
+      );
+    } else {
+      var args = [a, b, c, d, e, f];
+      var argIndex = 0;
+      error = new Error(
+        format.replace(/%s/g, function() { return args[argIndex++]; })
+      );
+      error.name = 'Invariant Violation';
+    }
+
+    error.framesToPop = 1; // we don't care about invariant's own frame
+    throw error;
+  }
+};
+
+module.exports = invariant;
+
+
+/***/ }),
+
 /***/ "./node_modules/isarray/index.js":
 /*!***************************************!*\
   !*** ./node_modules/isarray/index.js ***!
@@ -3330,6 +3468,67 @@ module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
+
+/***/ }),
+
+/***/ "./node_modules/json2mq/index.js":
+/*!***************************************!*\
+  !*** ./node_modules/json2mq/index.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var camel2hyphen = __webpack_require__(/*! string-convert/camel2hyphen */ "./node_modules/string-convert/camel2hyphen.js");
+
+var isDimension = function (feature) {
+  var re = /[height|width]$/;
+  return re.test(feature);
+};
+
+var obj2mq = function (obj) {
+  var mq = '';
+  var features = Object.keys(obj);
+  features.forEach(function (feature, index) {
+    var value = obj[feature];
+    feature = camel2hyphen(feature);
+    // Add px to dimension features
+    if (isDimension(feature) && typeof value === 'number') {
+      value = value + 'px';
+    }
+    if (value === true) {
+      mq += feature;
+    } else if (value === false) {
+      mq += 'not ' + feature;
+    } else {
+      mq += '(' + feature + ': ' + value + ')';
+    }
+    if (index < features.length-1) {
+      mq += ' and '
+    }
+  });
+  return mq;
+};
+
+var json2mq = function (query) {
+  var mq = '';
+  if (typeof query === 'string') {
+    return query;
+  }
+  // Handling array of media queries
+  if (query instanceof Array) {
+    query.forEach(function (q, index) {
+      mq += obj2mq(q);
+      if (index < query.length-1) {
+        mq += ', '
+      }
+    });
+    return mq;
+  }
+  // Handling single media query
+  return obj2mq(query);
+};
+
+module.exports = json2mq;
 
 /***/ }),
 
@@ -32999,6 +33198,256 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/react-media/esm/react-media.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/react-media/esm/react-media.js ***!
+  \*****************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var _babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/inheritsLoose */ "./node_modules/@babel/runtime/helpers/esm/inheritsLoose.js");
+/* harmony import */ var _babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/esm/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/esm/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var invariant__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! invariant */ "./node_modules/invariant/browser.js");
+/* harmony import */ var invariant__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(invariant__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var json2mq__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! json2mq */ "./node_modules/json2mq/index.js");
+/* harmony import */ var json2mq__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(json2mq__WEBPACK_IMPORTED_MODULE_7__);
+
+
+
+
+
+
+
+
+
+var MediaQueryListener =
+/*#__PURE__*/
+function () {
+  function MediaQueryListener(targetWindow, query, listener) {
+    var _this = this;
+
+    this.nativeMediaQueryList = targetWindow.matchMedia(query);
+    this.active = true; // Safari doesn't clear up listener with removeListener
+    // when the listener is already waiting in the event queue.
+    // Having an active flag to make sure the listener is not called
+    // after we removeListener.
+
+    this.cancellableListener = function () {
+      _this.matches = _this.nativeMediaQueryList.matches;
+
+      if (_this.active) {
+        listener.apply(void 0, arguments);
+      }
+    };
+
+    this.nativeMediaQueryList.addListener(this.cancellableListener);
+    this.matches = this.nativeMediaQueryList.matches;
+  }
+
+  var _proto = MediaQueryListener.prototype;
+
+  _proto.cancel = function cancel() {
+    this.active = false;
+    this.nativeMediaQueryList.removeListener(this.cancellableListener);
+  };
+
+  return MediaQueryListener;
+}();
+
+var queryType = prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.string, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.object, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.object.isRequired)]);
+/**
+ * Conditionally renders based on whether or not a media query matches.
+ */
+
+var Media =
+/*#__PURE__*/
+function (_React$Component) {
+  Object(_babel_runtime_helpers_esm_inheritsLoose__WEBPACK_IMPORTED_MODULE_1__["default"])(Media, _React$Component);
+
+  function Media(props) {
+    var _this;
+
+    _this = _React$Component.call(this, props) || this;
+
+    Object(_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(Object(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(Object(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this)), "queries", []);
+
+    Object(_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(Object(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(Object(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this)), "getMatches", function () {
+      var result = _this.queries.reduce(function (acc, _ref) {
+        var _extends2;
+
+        var name = _ref.name,
+            mqListener = _ref.mqListener;
+        return Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, acc, (_extends2 = {}, _extends2[name] = mqListener.matches, _extends2));
+      }, {}); // return result;
+
+
+      return unwrapSingleQuery(result);
+    });
+
+    Object(_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(Object(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(Object(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this)), "updateMatches", function () {
+      var newMatches = _this.getMatches();
+
+      _this.setState(function () {
+        return {
+          matches: newMatches
+        };
+      }, _this.onChange);
+    });
+
+    !(!(!props.query && !props.queries) || props.query && props.queries) ?  true ? invariant__WEBPACK_IMPORTED_MODULE_6___default()(false, '<Media> must be supplied with either "query" or "queries"') : undefined : void 0;
+    !(props.defaultMatches === undefined || !props.query || typeof props.defaultMatches === "boolean") ?  true ? invariant__WEBPACK_IMPORTED_MODULE_6___default()(false, "<Media> when query is set, defaultMatches must be a boolean, received " + typeof props.defaultMatches) : undefined : void 0;
+    !(props.defaultMatches === undefined || !props.queries || typeof props.defaultMatches === "object") ?  true ? invariant__WEBPACK_IMPORTED_MODULE_6___default()(false, "<Media> when queries is set, defaultMatches must be a object of booleans, received " + typeof props.defaultMatches) : undefined : void 0;
+
+    if (typeof window !== "object") {
+      // In case we're rendering on the server, apply the default matches
+      var matches;
+
+      if (props.defaultMatches !== undefined) {
+        matches = props.defaultMatches;
+      } else if (props.query) {
+        matches = true;
+      }
+      /* if (props.queries) */
+      else {
+          matches = Object.keys(_this.props.queries).reduce(function (acc, key) {
+            var _extends3;
+
+            return Object(_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, acc, (_extends3 = {}, _extends3[key] = true, _extends3));
+          }, {});
+        }
+
+      _this.state = {
+        matches: matches
+      };
+      return Object(_babel_runtime_helpers_esm_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this);
+    }
+
+    _this.initialize(); // Instead of calling this.updateMatches, we manually set the initial state to prevent
+    // calling setState, which could trigger an unnecessary second render
+
+
+    _this.state = {
+      matches: _this.props.defaultMatches !== undefined ? _this.props.defaultMatches : _this.getMatches()
+    };
+
+    _this.onChange();
+
+    return _this;
+  }
+
+  var _proto = Media.prototype;
+
+  _proto.initialize = function initialize() {
+    var _this2 = this;
+
+    var targetWindow = this.props.targetWindow || window;
+    !(typeof targetWindow.matchMedia === "function") ?  true ? invariant__WEBPACK_IMPORTED_MODULE_6___default()(false, "<Media targetWindow> does not support `matchMedia`.") : undefined : void 0;
+    var queries = this.props.queries || wrapInQueryObject(this.props.query);
+    this.queries = Object.keys(queries).map(function (name) {
+      var query = queries[name];
+      var qs = typeof query !== "string" ? json2mq__WEBPACK_IMPORTED_MODULE_7___default()(query) : query;
+      var mqListener = new MediaQueryListener(targetWindow, qs, _this2.updateMatches);
+      return {
+        name: name,
+        mqListener: mqListener
+      };
+    });
+  };
+
+  _proto.componentDidMount = function componentDidMount() {
+    this.initialize(); // If props.defaultMatches has been set, ensure we trigger a two-pass render.
+    // This is useful for SSR with mismatching defaultMatches vs actual matches from window.matchMedia
+    // Details: https://github.com/ReactTraining/react-media/issues/81
+
+    if (this.props.defaultMatches !== undefined) {
+      this.updateMatches();
+    }
+  };
+
+  _proto.onChange = function onChange() {
+    var onChange = this.props.onChange;
+
+    if (onChange) {
+      onChange(this.state.matches);
+    }
+  };
+
+  _proto.componentWillUnmount = function componentWillUnmount() {
+    this.queries.forEach(function (_ref2) {
+      var mqListener = _ref2.mqListener;
+      return mqListener.cancel();
+    });
+  };
+
+  _proto.render = function render() {
+    var _this$props = this.props,
+        children = _this$props.children,
+        render = _this$props.render;
+    var matches = this.state.matches;
+    var isAnyMatches = typeof matches === "object" ? Object.keys(matches).some(function (key) {
+      return matches[key];
+    }) : matches;
+    return render ? isAnyMatches ? render(matches) : null : children ? typeof children === "function" ? children(matches) : !Array.isArray(children) || children.length // Preact defaults to empty children array
+    ? isAnyMatches ? // We have to check whether child is a composite component or not to decide should we
+    // provide `matches` as a prop or not
+    react__WEBPACK_IMPORTED_MODULE_4___default.a.Children.only(children) && typeof react__WEBPACK_IMPORTED_MODULE_4___default.a.Children.only(children).type === "string" ? react__WEBPACK_IMPORTED_MODULE_4___default.a.Children.only(children) : react__WEBPACK_IMPORTED_MODULE_4___default.a.cloneElement(react__WEBPACK_IMPORTED_MODULE_4___default.a.Children.only(children), {
+      matches: matches
+    }) : null : null : null;
+  };
+
+  return Media;
+}(react__WEBPACK_IMPORTED_MODULE_4___default.a.Component);
+/**
+ * Wraps a single query in an object. This is used to provide backward compatibility with
+ * the old `query` prop (as opposed to `queries`). If only a single query is passed, the object
+ * will be unpacked down the line, but this allows our internals to assume an object of queries
+ * at all times.
+ */
+
+
+Object(_babel_runtime_helpers_esm_defineProperty__WEBPACK_IMPORTED_MODULE_3__["default"])(Media, "propTypes", {
+  defaultMatches: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.bool, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.objectOf(prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.bool)]),
+  query: queryType,
+  queries: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.objectOf(queryType),
+  render: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func,
+  children: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.oneOfType([prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.node, prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func]),
+  targetWindow: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.object,
+  onChange: prop_types__WEBPACK_IMPORTED_MODULE_5___default.a.func
+});
+
+function wrapInQueryObject(query) {
+  return {
+    __DEFAULT__: query
+  };
+}
+/**
+ * Unwraps an object of queries, if it was originally passed as a single query.
+ */
+
+
+function unwrapSingleQuery(queryObject) {
+  var queryNames = Object.keys(queryObject);
+
+  if (queryNames.length === 1 && queryNames[0] === "__DEFAULT__") {
+    return queryObject.__DEFAULT__;
+  }
+
+  return queryObject;
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Media);
+
+
+/***/ }),
+
 /***/ "./node_modules/react-router-dom/esm/react-router-dom.js":
 /*!***************************************************************!*\
   !*** ./node_modules/react-router-dom/esm/react-router-dom.js ***!
@@ -43714,6 +44163,25 @@ module.exports = Url;
 //# sourceMappingURL=sockjs.js.map
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
+/***/ "./node_modules/string-convert/camel2hyphen.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/string-convert/camel2hyphen.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var camel2hyphen = function (str) {
+  return str
+          .replace(/[A-Z]/g, function (match) {
+            return '-' + match.toLowerCase();
+          })
+          .toLowerCase();
+};
+
+module.exports = camel2hyphen;
 
 /***/ }),
 
