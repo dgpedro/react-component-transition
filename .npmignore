@@ -4,5 +4,6 @@
 /docs
 
 .gitignore
+.babelrc
 tsconfig.json
 webpack.config.js

@@ -104,7 +104,7 @@ export async function finishAnimation(
             (animation ? 1 : 0);
     let counter = 0;
 
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
 
         if (!animationCount) {
             resolve();
