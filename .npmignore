@@ -6,4 +6,5 @@
 .gitignore
 .babelrc
 tsconfig.json
+tsconfig-cjs.json
 webpack.config.js
