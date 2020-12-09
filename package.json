@@ -5,11 +5,10 @@
   "main": "./build/cjs/index.js",
   "module": "./build/esm/index.js",
   "scripts": {
-    "clean": "rimraf build docs/dist",
-    "build": "npm run clean && webpack --color --mode production",
-    "build-dev": "npm run clean && webpack --color --mode development",
-    "prepare": "npm run clean && npm run tsc",
-    "prestart": "npm run clean",
+    "build": "rimraf docs/dist && webpack --color --mode production",
+    "build-dev": "rimraf docs/dist && webpack --color --mode development",
+    "prepare": "rimraf build && npm run tsc",
+    "prestart": "rimraf docs/dist",
     "start": "webpack-dev-server --mode development",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json"
   },
