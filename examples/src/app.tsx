@@ -75,8 +75,6 @@ const styles: { [index: string]: React.CSSProperties } = {
     mainPanel: {
         overflow: "hidden",
         flexGrow: 1,
-        alignSelf: "center",
-        justifyContent: "center",
         backgroundColor: "lavender",
         boxShadow: "grey -2px 2px 10px",
     },
