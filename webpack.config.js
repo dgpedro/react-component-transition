@@ -2,6 +2,7 @@
 
 const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = (env, options) => {
@@ -14,9 +15,8 @@ module.exports = (env, options) => {
             'examples': './examples/src/index'
         },
         output: {
-            path: path.join(__dirname, "docs/dist"),
-            filename: "[name].js",
-            publicPath: "/docs/dist/",
+            path: path.join(__dirname, "docs"),
+            filename: isDev ? "[name].js" : "[name].[hash].js",
         },
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
@@ -49,6 +49,9 @@ module.exports = (env, options) => {
             ],
         },
         plugins: [
+            new HtmlWebpackPlugin({
+                template: 'examples/src/index.html',
+            }),
             new ForkTsCheckerWebpackPlugin(),
             // new BundleAnalyzerPlugin(),
         ],
@@ -57,7 +60,7 @@ module.exports = (env, options) => {
             overlay: true,
             port: 8080,
             contentBase: path.join(__dirname, 'docs'),
-            publicPath: "/react-component-transition/dist/",
+            publicPath: "/react-component-transition/",
             writeToDisk: true,
             historyApiFallback: {
                 index: '/index.html'
