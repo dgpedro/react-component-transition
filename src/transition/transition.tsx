@@ -1,8 +1,6 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState, useCallback, useContext } from "react";
 import classnames from "classnames";
 
-import { ComponentTransitionProps } from "../types";
-import { defaultTransitionDuration, defaultTransitionEasing } from "../animations/defaults";
 import { TransitionState } from "./animation-hooks/types";
 import {
     AnimationHook,
@@ -11,18 +9,41 @@ import {
     useContainerAnimation,
     useEnterAnimation,
 } from "./animation-hooks";
+import { TransitionContext } from "./transition-context";
+
+import { ComponentTransitionProps } from "../types";
+import { defaultTransitionDuration, defaultTransitionEasing } from "../animations/defaults";
 
 interface Props extends ComponentTransitionProps {
     inViewRef?: (element: HTMLElement) => void;
 }
 
-export const Transition: React.FC<Props> = (props) => {
+export const Transition: React.FC<Props> = ({
+    animateContainer,
+    animateContainerDuration,
+    animateContainerEasing,
+    animateOnMount: animateOnMountProp,
+    children: childrenProp,
+    className,
+    classNameEnter,
+    classNameExit,
+    disabled,
+    enterAnimation,
+    exitAnimation,
+    inViewRef,
+    onEnterFinished,
+    onExitFinished,
+    style,
+}) => {
 
     const [transitionState, setTransitionState] = useState<TransitionState>(null);
 
-    const { children, inViewRef, disabled } = props;
+    const context = useContext(TransitionContext);
 
-    const prevChildren = useRef<React.ReactNode>(props.animateOnMount ? null : children);
+    const children = context?.shouldExit ? null : childrenProp;
+    const animateOnMount = context?.shouldEnter || animateOnMountProp;
+
+    const prevChildren = useRef<React.ReactNode>(animateOnMount ? null : children);
     const containerRef = useRef<HTMLDivElement>(null);
     const unmounted = useRef(false);
 
@@ -65,15 +86,22 @@ export const Transition: React.FC<Props> = (props) => {
         onFinish: () => udpatedState(TransitionState.Container),
     });
 
+    const exitFinishedHandler = () => {
+        onExitFinished && onExitFinished();
+        if (context?.contextId && context?.onExitFinished) {
+            context.onExitFinished(context.contextId);
+        }
+    };
+
     useExitAnimation({
         ...animationHooks,
         prevClientRect: prevClientRect,
-        settings: props.exitAnimation,
+        settings: exitAnimation,
         onFinish: () => {
             const hadPrevChildren = !!prevChildren.current;
             prevChildren.current = children;
             if (hadPrevChildren && prevChildren.current) {
-                props.onExitFinished && props.onExitFinished();
+                exitFinishedHandler();
             }
             udpatedState(TransitionState.ContainerRect);
         },
@@ -83,12 +111,12 @@ export const Transition: React.FC<Props> = (props) => {
         ...animationHooks,
         prevClientRect,
         nextClientRect,
-        animateContainer: props.animateContainer,
-        animateContainerDuration: props.animateContainerDuration,
-        animateContainerEasing: props.animateContainerEasing,
+        animateContainer,
+        animateContainerDuration,
+        animateContainerEasing,
         onFinish: () => {
             if (!prevChildren.current) {
-                props.onExitFinished && props.onExitFinished();
+                exitFinishedHandler();
             }
             udpatedState(TransitionState.Enter);
         },
@@ -97,10 +125,10 @@ export const Transition: React.FC<Props> = (props) => {
     useEnterAnimation({
         ...animationHooks,
         nextClientRect,
-        settings: props.enterAnimation,
+        settings: enterAnimation,
         onFinish: () => {
             if (prevChildren.current) {
-                props.onEnterFinished && props.onEnterFinished();
+                onEnterFinished && onEnterFinished();
             }
             udpatedState(null);
         },
@@ -122,25 +150,31 @@ export const Transition: React.FC<Props> = (props) => {
     }
 
     return (
-        <div
-            ref={setRefs}
-            className={
-                classnames(
-                    props.className,
-                    transitionState === TransitionState.Enter && props.classNameEnter,
-                    transitionState === TransitionState.Exit && props.classNameExit,
-                ) || null}
-            style={{
-                ...props.style,
-                opacity: hideContent ? 0 : null,
-            }}
-        >
-            {
-                shouldRenderPrevChildren ?
-                    prevChildren.current :
-                    children
-            }
-        </div>
+        // Reset context to avoid misbehavior of ComponentTransitionList 
+        // when children contains another ComponentTranstion/Preset.
+        // In next major release, should exist a ComponentTransitionListItem that
+        // should handle the context.
+        <TransitionContext.Provider value={null}>
+            <div
+                ref={setRefs}
+                className={
+                    classnames(
+                        className,
+                        transitionState === TransitionState.Enter && classNameEnter,
+                        transitionState === TransitionState.Exit && classNameExit,
+                    ) || null}
+                style={{
+                    ...style,
+                    opacity: hideContent ? 0 : null,
+                }}
+            >
+                {
+                    shouldRenderPrevChildren ?
+                        prevChildren.current :
+                        children
+                }
+            </div>
+        </TransitionContext.Provider>
     );
 };
 

@@ -1,13 +1,15 @@
 import React from "react";
 
-import { ComponentTransition, AnimationTypes, AnimationSettings } from "../../../../src";
-import { Box, BoxColor, Size } from "../../components";
+import { ComponentTransition, AnimationTypes, AnimationSettings } from "../../../../../src";
+import { TransitionScale } from "../../../../../src/presets";
+import { Box, BoxColor, Size } from "../../../components";
 
 interface Props {
     index: number;
     color: BoxColor;
     onAdd: (index: number) => void;
     onRemove: (index: number) => void;
+    canRemove: boolean;
 }
 
 export const ListItem: React.FC<Props> = React.memo(({
@@ -15,6 +17,7 @@ export const ListItem: React.FC<Props> = React.memo(({
     color,
     onAdd,
     onRemove,
+    canRemove,
 }) => {
     return (
         <div style={styles.listItemContainer}>
@@ -29,11 +32,15 @@ export const ListItem: React.FC<Props> = React.memo(({
                         color={color}
                         size={Size.Small}
                     />
-                    <button
-                        type="button"
-                        style={{ ...styles.button, ...styles.cross }}
-                        onClick={onRemove.bind(null, index)}
-                    >X</button>
+                    <TransitionScale style={styles.crossContainer}>
+                        {canRemove && (
+                            <button
+                                type="button"
+                                style={{ ...styles.button, ...styles.cross }}
+                                onClick={onRemove.bind(null, index)}
+                            >X</button>
+                        )}
+                    </TransitionScale>
                     <div style={styles.plusContainer}>
                         <button
                             type="button"
@@ -120,10 +127,12 @@ const styles: { [index: string]: React.CSSProperties } = {
         borderColor: "green",
         width: "70%",
     },
-    cross: {
+    crossContainer: {
         position: "absolute",
         top: "10px",
         right: "5px",
+    },
+    cross: {
         color: "red",
         borderColor: "red",
         borderRadius: "25%",

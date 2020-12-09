@@ -1,6 +1,7 @@
 "use strict"
 
 const path = require('path');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = (env, options) => {
@@ -27,16 +28,11 @@ module.exports = (env, options) => {
         module: {
             rules: [
                 {
-                    test: /\.(ts|tsx)$/,
-                    use: {
-                        loader: 'ts-loader',
-                        options: {
-                            compilerOptions: {
-                                sourceMap: isDev,
-                            },
-                        },
-                    },
+                    test: /\.(ts|js)x?$/,
+                    exclude: /node_modules/,
+                    loader: "babel-loader",
                 },
+                // IE support
                 {
                     test: /\.js$/,
                     loader: "babel-loader",
@@ -53,6 +49,7 @@ module.exports = (env, options) => {
             ],
         },
         plugins: [
+            new ForkTsCheckerWebpackPlugin(),
             // new BundleAnalyzerPlugin(),
         ],
         devServer: {
@@ -60,11 +57,13 @@ module.exports = (env, options) => {
             overlay: true,
             port: 8080,
             contentBase: path.join(__dirname, 'docs'),
+            publicPath: "/react-component-transition/dist/",
             writeToDisk: true,
             historyApiFallback: {
                 index: '/index.html'
             },
             open: true,
+            openPage: 'react-component-transition'
         }
     }
 }
