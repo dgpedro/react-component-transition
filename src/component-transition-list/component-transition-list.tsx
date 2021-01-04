@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 
 import { useChildrenManager } from "./use-children-manager";
 import { TransitionContext, TransitionContextProps } from "../transition";
@@ -10,54 +10,45 @@ interface TransitionListProps {
 export const ComponentTransitionList: React.FC<TransitionListProps> = ({
     children
 }) => {
-    const [, setCounter] = useState(0);
-
-    const exitCounter = useRef(0);
-    const mounted = useRef(false);
-
-    useEffect(() => {
-        mounted.current = true;
-    }, [])
+    const [, forceUpdate] = useState(0);
 
     const {
         childrenMapper,
         internalKeys,
-        exitCounter: exiting,
-        removeChild,
+        enterKeys,
+        exitKeys,
+        removeExit,
+        removeEnter,
     } =
         useChildrenManager(children as React.ReactElement[]);
 
-    exitCounter.current = exiting;
-
     const onExitFinished = (internalKey: string) => {
-        if (!childrenMapper[internalKey]?.shouldExit) {
-            return;
-        }
+        const remaining = removeExit(internalKey);
 
-        removeChild(internalKey);
-        exitCounter.current--;
-
-        if (exitCounter.current === 0) {
-            setCounter((counterState) => counterState + 1);
+        if (remaining === 0) {
+            forceUpdate((counter) => counter + 1);
         }
+    };
+
+    const onEnterFinished = (internalKey: string) => {
+        removeEnter(internalKey);
     };
 
     return (
         <>
             {
                 internalKeys.map((internalKey) => {
-                    const { children, shouldEnter, shouldExit } = childrenMapper[internalKey];
-
                     const context: TransitionContextProps = {
                         contextId: internalKey,
                         onExitFinished,
-                        shouldEnter: mounted.current && shouldEnter,
-                        shouldExit,
+                        onEnterFinished,
+                        enterKeys,
+                        exitKeys,
                     };
 
                     return (
                         <TransitionContext.Provider key={internalKey} value={context}>
-                            {children}
+                            {childrenMapper[internalKey]}
                         </TransitionContext.Provider>
                     );
                 })

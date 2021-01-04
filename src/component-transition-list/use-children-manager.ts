@@ -1,7 +1,7 @@
-import React, { Key, useRef } from "react";
+import React, { Key, useEffect, useRef } from "react";
 import uniqid from "uniqid";
 
-import { ChildrenManagerOut, ChildrenMapper, TransitionChildren } from "./types";
+import { ChildrenManagerOut, ChildrenMapper } from "./types";
 
 /**
  * Returns a new object in the format {[key]: internalKey}.
@@ -10,7 +10,7 @@ import { ChildrenManagerOut, ChildrenMapper, TransitionChildren } from "./types"
 const invertMapper = (keysMapper: ChildrenMapper) => {
     const inverted: Record<string, string> = {};
     for (const key of Object.keys(keysMapper)) {
-        const childKey = keysMapper[key]?.children?.key;
+        const childKey = keysMapper[key]?.key;
         if (childKey) {
             inverted[childKey] = key;
         }
@@ -29,13 +29,24 @@ export const useChildrenManager = (
 
     const childrenMapper = useRef<ChildrenMapper>({});
     const internalKeys = useRef<string[]>([]);
+    
+    const exitKeys = useRef<string[]>([]);
+    const enterKeys = useRef<string[]>([]);
+
+    const mounted = useRef(false);
+
+    useEffect(() => {
+        mounted.current = true;
+    }, []);
 
     if (!children) {
         return {
             childrenMapper: childrenMapper.current,
             internalKeys: internalKeys.current,
-            exitCounter: 0,
-            removeChild: () => { },
+            removeExit: () => 0,
+            removeEnter: () => 0,
+            exitKeys: [],
+            enterKeys: [],
         };
     }
 
@@ -57,17 +68,19 @@ export const useChildrenManager = (
         if (childKey !== undefined && childKey !== null && childInternalKey === undefined) {
             const newKey = uniqid();
             internalKeysUpdated.push(newKey);
-            childrenMapper.current[newKey] = getTransitionChildren(child, true);
+            childrenMapper.current[newKey] = child;
             childrenKeysAssert[childKey] = newKey;
             newChildrenIndexes.push(i);
+            
+            if (mounted.current) {
+                enterKeys.current.push(newKey);
+            }
         } else if (childInternalKey) {
             internalKeysUpdated.push(childInternalKey);
-            childrenMapper.current[childInternalKey] = getTransitionChildren(child);
+            childrenMapper.current[childInternalKey] = child;
             childrenKeysAssert[childKey] = childInternalKey;
         }
     });
-
-    let exitCounter = 0;
 
     for (let i = 0; i < internalKeys.current.length; i++) {
         const exists = internalKeysUpdated.indexOf(internalKeys.current[i]) > -1;
@@ -84,32 +97,32 @@ export const useChildrenManager = (
             internalKeys.current[i],
             ...internalKeysUpdated.slice(index)
         ];
-        childrenMapper.current[internalKeys.current[i]].shouldExit = true;
-        exitCounter++;
+        exitKeys.current.push(internalKeys.current[i]);
     }
 
     internalKeys.current = internalKeysUpdated;
 
-    const removeChild = (internalKey: string) => {
+    const removeExit = (internalKey: string) => {
         delete childrenMapper.current[internalKey];
         internalKeys.current = internalKeys.current.filter((key) => key !== internalKey);
+        exitKeys.current = exitKeys.current.filter((key) => key !== internalKey);
+        return exitKeys.current.length;
+    };
+
+    const removeEnter = (internalKey: string) => {
+        enterKeys.current = enterKeys.current.filter((key) => key !== internalKey);
+        return enterKeys.current.length;
     };
 
     return {
         childrenMapper: childrenMapper.current,
         internalKeys: internalKeys.current,
-        exitCounter,
-        removeChild,
+        removeExit,
+        removeEnter,
+        exitKeys: exitKeys.current,
+        enterKeys: enterKeys.current,
     };
 }
-
-const getTransitionChildren = (child: React.ReactElement, isNew = false): TransitionChildren => (
-    {
-        children: child,
-        shouldEnter: isNew,
-        shouldExit: false,
-    }
-);
 
 const logError = (message: string) => {
     if (process.env.NODE_ENV === "development") {

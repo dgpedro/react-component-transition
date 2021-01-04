@@ -40,8 +40,11 @@ export const Transition: React.FC<Props> = ({
 
     const context = useContext(TransitionContext);
 
-    const children = context?.shouldExit ? null : childrenProp;
-    const animateOnMount = context?.shouldEnter || animateOnMountProp;
+    const shouldExit = context?.exitKeys.indexOf(context.contextId) > -1;
+    const shouldEnter = context?.enterKeys.indexOf(context.contextId) > -1;
+
+    const children = shouldExit ? null : childrenProp;
+    const animateOnMount = shouldEnter || animateOnMountProp;
 
     const prevChildren = useRef<React.ReactNode>(animateOnMount ? null : children);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -129,6 +132,9 @@ export const Transition: React.FC<Props> = ({
         onFinish: () => {
             if (prevChildren.current) {
                 onEnterFinished && onEnterFinished();
+                if (context?.contextId && context?.onEnterFinished) {
+                    context.onEnterFinished(context.contextId);
+                }
             }
             udpatedState(null);
         },

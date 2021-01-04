@@ -1,28 +1,8 @@
 /**
- * Transtion properties to be applied to each children of the list,
- * including the children itself.
- * @internal
- */
-export interface TransitionChildren {
-    /**
-     * Reference to each children of the list.
-     */
-    children: React.ReactElement,
-    /**
-     * 'true' if 'children' should enter into DOM.
-     */
-    shouldEnter: boolean;
-    /**
-     * 'true' if 'children' should leave the DOM.
-     */
-    shouldExit: boolean;
-}
-
-/**
  * Mapper of internal uid keys and 'TransitionChild'.
  * @internal
  */
-export interface ChildrenMapper extends Record<string, TransitionChildren> { }
+export interface ChildrenMapper extends Record<string, React.ReactElement> { }
 
 /**
  * The output transformed children.
@@ -39,12 +19,22 @@ export interface ChildrenManagerOut {
      */
     internalKeys: string[];
     /**
-     * The number of children currently exiting the DOM.
-     */
-    exitCounter: number;
-    /**
-     * Removes children from 'childrenMapper' and 'internalKeys'.
+     * Removes children from from all instances where it's being used.
      * To be called once exit animation finished.
+     * @returns Number of remaining children in the exit list.
      */
-    removeChild: (internalKey: string) => void;
+    removeExit: (internalKey: string) => number;
+    /**
+     * Removes children from internal enter list.
+     * @returns Number of remaining children in the enter list.
+     */
+    removeEnter: (internalKey: string) => number;
+    /**
+     * List of internal keys of the children that are current exiting.
+     */
+    exitKeys: string[];
+    /**
+     * List of internal keys of the children that are currently entering.
+     */
+    enterKeys: string[];
 }
