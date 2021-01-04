@@ -1,1 +1,1 @@
-module.exports = require("./build/presets");
+module.exports = require("./build/cjs/presets");
