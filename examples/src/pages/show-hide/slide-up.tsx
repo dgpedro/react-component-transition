@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { TransitionSlideUp } from "../../../../src/presets";
+import { Presets } from "../../../../src";
 import { Box, BoxColor } from "../../components";
 
 export const SlideUp: React.FC = () => {
@@ -18,11 +18,11 @@ export const SlideUp: React.FC = () => {
                 <span style={show ? styles.arrowUp : styles.arrowDown}></span>
             </button>
             <div style={styles.transitionContainer}>
-                <TransitionSlideUp>
+                <Presets.TransitionSlideUp>
                     {
                         show && <Box color={BoxColor.yellowGreen} />
                     }
-                </TransitionSlideUp>
+                </Presets.TransitionSlideUp>
             </div>
         </div>
     );

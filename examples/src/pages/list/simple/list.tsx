@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
 import { Box, BoxColor, Size } from "../../../components";
-import { ComponentTransitionList, ComponentTransition, AnimationTypes } from "../../../../../src";
-import { TransitionFade } from "../../../../../src/presets";
+import { ComponentTransitionList, ComponentTransition, Presets, AnimationTypes } from "../../../../../src";
 
 export const List = () => {
     const [items, setItems] = useState<BoxColor[]>([randomColor()]);
@@ -53,14 +52,14 @@ export const List = () => {
             </div>
             <ComponentTransitionList>
                 {items.map((color, index) => (
-                    <TransitionFade key={index}>
+                    <Presets.TransitionFade key={index}>
                         <div style={styles.boxContainer}>
                             <Box
                                 color={color}
                                 size={Size.Small}
                             />
                         </div>
-                    </TransitionFade>
+                    </Presets.TransitionFade>
                 ))}
             </ComponentTransitionList>
         </div>

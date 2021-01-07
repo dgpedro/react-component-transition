@@ -72,15 +72,15 @@ const Component = () => {
 Presets are components that have `enterAnimation` and `exitAnimation` already set, for an easier and cleaner usage.
 
 ```javascript
-import { TransitionFade } from "react-component-transition/presets";
+import { Presets } from "react-component-transition";
 const Component = () => {
     
     // ...
 
     return (
-        <TransitionFade>
+        <Presets.TransitionFade>
             {show && <Details />}
-        </TransitionFade>
+        </Presets.TransitionFade>
     );
 };
 ```
@@ -92,8 +92,7 @@ There's a preset available for each `AnimationTypes`.
 To be used with lists. Simply return a `ComponentTransition` or any preset in your `map` function and wrap it all with a `ComponentTransitionList`.
 
 ```javascript
-import { ComponentTransitionList } from "react-component-transition";
-import { TransitionScale } from "react-component-transition/presets";
+import { ComponentTransitionList, Presets } from "react-component-transition";
 const Component = () => {
     
     // ...
@@ -101,9 +100,9 @@ const Component = () => {
     return (
         <ComponentTransitionList>
             {list.map((listItem, index) =>
-                <TransitionScale key={index}>
+                <Presets.TransitionScale key={index}>
                     <ListItem {...listItem} />
-                </TransitionScale>
+                </Presets.TransitionScale>
             )}
         </ComponentTransitionList>
     );
@@ -223,7 +222,7 @@ classNameExit | string | `undefined` | CSS class to set in the container element
 disabled | boolean | `false` | disable all animations
 enterAnimation | AnimationSettings \| AnimationSettings[] | `undefined` | [Web Animations API parameters](https://developer.mozilla.org/en-US/docs/Web/API/Element/animate#Parameters) to be applied when new component mounts
 exitAnimation | AnimationSettings \| AnimationSettings[] | `undefined` | [Web Animations API parameters](https://developer.mozilla.org/en-US/docs/Web/API/Element/animate#Parameters) to be applied when current component will unmount
-lazy | boolean | `false` | Will apply `enterAnimation` and/or `exitAnimation` if the component is visible in the viewport by using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
+lazy | boolean | `false` | Will apply `enterAnimation` and `exitAnimation` if the component is visible in the viewport by using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
 lazyOptions | IntersectionOptions | `undefined` | [Intersection Observer options](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options)
 onEnterFinished | () => void | `undefined` | Callback when `enterAnimation` finishes
 onExitFinished | () => void | `undefined` | Callback when `exitAnimation` finishes

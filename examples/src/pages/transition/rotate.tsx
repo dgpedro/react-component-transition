@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Box, BoxColor } from "../../components";
-import { TransitionRotateX } from "../../../../src/presets";
+import { Presets } from "../../../../src";
 
 export const Rotate: React.FC = () => {
     const [showDetails, setShowDetails] = useState(false);
@@ -12,9 +12,9 @@ export const Rotate: React.FC = () => {
 
     return (
         <div style={styles.container}>
-            <TransitionRotateX>
+            <Presets.TransitionRotateX>
                 {showDetails ? <Back onClick={onClick} /> : <Front onClick={onClick} />}
-            </TransitionRotateX>
+            </Presets.TransitionRotateX>
         </div>
     );
 };

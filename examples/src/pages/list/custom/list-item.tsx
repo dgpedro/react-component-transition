@@ -1,7 +1,6 @@
 import React from "react";
 
-import { ComponentTransition, AnimationTypes, AnimationSettings } from "../../../../../src";
-import { TransitionScale } from "../../../../../src/presets";
+import {Presets, ComponentTransition, AnimationTypes, AnimationSettings } from "../../../../../src";
 import { Box, BoxColor, Size } from "../../../components";
 
 interface Props {
@@ -32,7 +31,7 @@ export const ListItem: React.FC<Props> = React.memo(({
                         color={color}
                         size={Size.Small}
                     />
-                    <TransitionScale style={styles.crossContainer}>
+                    <Presets.TransitionScale style={styles.crossContainer}>
                         {canRemove && (
                             <button
                                 type="button"
@@ -40,7 +39,7 @@ export const ListItem: React.FC<Props> = React.memo(({
                                 onClick={onRemove.bind(null, index)}
                             >X</button>
                         )}
-                    </TransitionScale>
+                    </Presets.TransitionScale>
                     <div style={styles.plusContainer}>
                         <button
                             type="button"

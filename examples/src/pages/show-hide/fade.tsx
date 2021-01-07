@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Box } from "../../components";
-import { TransitionFade } from "../../../../src/presets";
+import { Presets } from "../../../../src";
 
 export const Fade: React.FC = () => {
 
@@ -18,11 +18,11 @@ export const Fade: React.FC = () => {
                 <input id="show-check" type="checkbox" checked={show} onChange={onClick} />
             </div>
             <div style={styles.content}>
-                <TransitionFade>
+                <Presets.TransitionFade>
                     {
                         show && <Box />
                     }
-                </TransitionFade>
+                </Presets.TransitionFade>
             </div>
         </div>
     );
