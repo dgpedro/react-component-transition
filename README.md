@@ -212,7 +212,7 @@ All presets and the `ComponentTransition` will wrap their `children` in a `div` 
 
 Name | Type | Default | Description
 -----|------|---------|------------
-animateContainer | boolean | `false` | if `true` the container will also animate from the exit component size to the enter component size.<br />**NOTE:** _All presets have this prop set to `true` by default_
+animateContainer | boolean | `false` | if `true` the container will also animate from the exit component size to the enter component size<br />**NOTE:** _All presets have this prop set to `true` by default_
 animateContainerDuration | number | 300 | Duration in milliseconds of the container animation
 animateContainerEasing | string | "ease" | Easing of container animation
 animateOnMount | boolean | `false` | if `true`, applies `enterAnimation` when component mounts in the initial render
@@ -222,7 +222,7 @@ classNameExit | string | `undefined` | CSS class to set in the container element
 disabled | boolean | `false` | disable all animations
 enterAnimation | AnimationSettings \| AnimationSettings[] | `undefined` | [Web Animations API parameters](https://developer.mozilla.org/en-US/docs/Web/API/Element/animate#Parameters) to be applied when new component mounts
 exitAnimation | AnimationSettings \| AnimationSettings[] | `undefined` | [Web Animations API parameters](https://developer.mozilla.org/en-US/docs/Web/API/Element/animate#Parameters) to be applied when current component will unmount
-lazy | boolean | `false` | Will apply `enterAnimation` and `exitAnimation` if the component is visible in the viewport by using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
+lazy | boolean | `false` | Will apply `enterAnimation` and `exitAnimation` if the component is visible in the viewport by using the [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API). If `true` container element will always be in the DOM
 lazyOptions | IntersectionOptions | `undefined` | [Intersection Observer options](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options)
 onEnterFinished | () => void | `undefined` | Callback when `enterAnimation` finishes
 onExitFinished | () => void | `undefined` | Callback when `exitAnimation` finishes

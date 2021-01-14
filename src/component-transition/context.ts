@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export interface TransitionContextProps {
+export interface ComponentTransitionContextProps {
     contextId: string;
     onExitFinished: (contextId: string) => void;
     onEnterFinished: (contextId: string) => void;
@@ -8,4 +8,4 @@ export interface TransitionContextProps {
     enterKeys: string[];
 }
 
-export const TransitionContext = createContext<TransitionContextProps>(null);
+export const ComponentTransitionContext = createContext<ComponentTransitionContextProps>(null);

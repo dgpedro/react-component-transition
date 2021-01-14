@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback, useContext } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import classnames from "classnames";
 
 import { TransitionState } from "./animation-hooks/types";
@@ -9,7 +9,6 @@ import {
     useContainerAnimation,
     useEnterAnimation,
 } from "./animation-hooks";
-import { TransitionContext } from "./transition-context";
 
 import { ComponentTransitionProps } from "../types";
 import { defaultTransitionDuration, defaultTransitionEasing } from "../animations/defaults";
@@ -22,8 +21,8 @@ export const Transition: React.FC<Props> = ({
     animateContainer,
     animateContainerDuration,
     animateContainerEasing,
-    animateOnMount: animateOnMountProp,
-    children: childrenProp,
+    animateOnMount,
+    children,
     className,
     classNameEnter,
     classNameExit,
@@ -31,20 +30,13 @@ export const Transition: React.FC<Props> = ({
     enterAnimation,
     exitAnimation,
     inViewRef,
+    lazy,
     onEnterFinished,
     onExitFinished,
     style,
 }) => {
 
     const [transitionState, setTransitionState] = useState<TransitionState>(null);
-
-    const context = useContext(TransitionContext);
-
-    const shouldExit = context?.exitKeys.indexOf(context.contextId) > -1;
-    const shouldEnter = context?.enterKeys.indexOf(context.contextId) > -1;
-
-    const children = shouldExit ? null : childrenProp;
-    const animateOnMount = shouldEnter || animateOnMountProp;
 
     const prevChildren = useRef<React.ReactNode>(animateOnMount ? null : children);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -91,9 +83,6 @@ export const Transition: React.FC<Props> = ({
 
     const exitFinishedHandler = () => {
         onExitFinished && onExitFinished();
-        if (context?.contextId && context?.onExitFinished) {
-            context.onExitFinished(context.contextId);
-        }
     };
 
     useExitAnimation({
@@ -132,9 +121,6 @@ export const Transition: React.FC<Props> = ({
         onFinish: () => {
             if (prevChildren.current) {
                 onEnterFinished && onEnterFinished();
-                if (context?.contextId && context?.onEnterFinished) {
-                    context.onEnterFinished(context.contextId);
-                }
             }
             udpatedState(null);
         },
@@ -151,36 +137,30 @@ export const Transition: React.FC<Props> = ({
         [inViewRef],
     )
 
-    if (!hasChildrenChanged && !transitionState && !children) {
+    if (!lazy && !hasChildrenChanged && !transitionState && !children) {
         return null;
     }
 
     return (
-        // Reset context to avoid misbehavior of ComponentTransitionList 
-        // when children contains another ComponentTranstion/Preset.
-        // In next major release, should exist a ComponentTransitionListItem that
-        // should handle the context.
-        <TransitionContext.Provider value={null}>
-            <div
-                ref={setRefs}
-                className={
-                    classnames(
-                        className,
-                        transitionState === TransitionState.Enter && classNameEnter,
-                        transitionState === TransitionState.Exit && classNameExit,
-                    ) || null}
-                style={{
-                    ...style,
-                    opacity: hideContent ? 0 : null,
-                }}
-            >
-                {
-                    shouldRenderPrevChildren ?
-                        prevChildren.current :
-                        children
-                }
-            </div>
-        </TransitionContext.Provider>
+        <div
+            ref={setRefs}
+            className={
+                classnames(
+                    className,
+                    transitionState === TransitionState.Enter && classNameEnter,
+                    transitionState === TransitionState.Exit && classNameExit,
+                ) || null}
+            style={{
+                ...style,
+                opacity: hideContent ? 0 : null,
+            }}
+        >
+            {
+                shouldRenderPrevChildren ?
+                    prevChildren.current :
+                    children
+            }
+        </div>
     );
 };
 

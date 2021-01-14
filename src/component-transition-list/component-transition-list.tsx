@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { useChildrenManager } from "./use-children-manager";
-import { TransitionContext, TransitionContextProps } from "../transition";
+import { ComponentTransitionContext, ComponentTransitionContextProps } from "../component-transition";
 
 interface TransitionListProps {
     children: React.ReactElement[];
@@ -38,7 +38,7 @@ export const ComponentTransitionList: React.FC<TransitionListProps> = ({
         <>
             {
                 internalKeys.map((internalKey) => {
-                    const context: TransitionContextProps = {
+                    const context: ComponentTransitionContextProps = {
                         contextId: internalKey,
                         onExitFinished,
                         onEnterFinished,
@@ -47,9 +47,9 @@ export const ComponentTransitionList: React.FC<TransitionListProps> = ({
                     };
 
                     return (
-                        <TransitionContext.Provider key={internalKey} value={context}>
+                        <ComponentTransitionContext.Provider key={internalKey} value={context}>
                             {childrenMapper[internalKey]}
-                        </TransitionContext.Provider>
+                        </ComponentTransitionContext.Provider>
                     );
                 })
             }

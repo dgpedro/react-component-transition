@@ -52,7 +52,7 @@ export const List = () => {
             </div>
             <ComponentTransitionList>
                 {items.map((color, index) => (
-                    <Presets.TransitionFade key={index}>
+                    <Presets.TransitionFade lazy={true} key={index}>
                         <div style={styles.boxContainer}>
                             <Box
                                 color={color}
