@@ -9,13 +9,13 @@ interface LazyTransitionProps extends ComponentTransitionProps {
 }
 
 export const LazyTransition: React.FC<LazyTransitionProps> = (props) => {
-    const { inViewOptions, animateOnMount, children } = props;
+    const { animateOnMount, animateContainer, children, disabled, inViewOptions } = props;
     const [inViewRef, inView, entry] = useInView(inViewOptions);
 
-    const observerWait = !entry && animateOnMount;
+    const observerWait = !entry && animateOnMount && animateContainer;
 
     return (
-        <Transition {...props} inViewRef={inViewRef} disabled={!inView}>
+        <Transition {...props} inViewRef={inViewRef} inViewEnabled={!!entry} disabled={disabled || !inView}>
             {observerWait ? null : children}
         </Transition>
     );

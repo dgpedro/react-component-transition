@@ -21,7 +21,7 @@ export const useExitAnimation = (props: ExitAnimationProps) => {
         prevChildren,
         onFinish,
         transitionState,
-        element,
+        getElement,
         settings,
         prevClientRect,
         disabled,
@@ -50,7 +50,6 @@ export const useExitAnimation = (props: ExitAnimationProps) => {
         }
 
         if (isRunning.current) {
-            finish();
             return;
         }
 
@@ -58,7 +57,7 @@ export const useExitAnimation = (props: ExitAnimationProps) => {
         cancelAnimation(exitAnimation.current);
 
         isRunning.current = true;
-        exitAnimation.current = animateExit(element, prevClientRect, settings);
+        exitAnimation.current = animateExit(getElement(), prevClientRect, settings);
 
         finish();
     });

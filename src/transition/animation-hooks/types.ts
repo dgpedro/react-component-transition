@@ -10,6 +10,6 @@ export interface AnimationHook {
     prevChildren: React.ReactNode;
     transitionState: TransitionState;
     onFinish: () => void;
-    element: HTMLElement;
+    getElement: () => HTMLElement;
     disabled: boolean;
 }

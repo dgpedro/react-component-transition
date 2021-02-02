@@ -17,7 +17,7 @@ export const useEnterAnimation = (props: EnterAnimationProps) => {
     const {
         transitionState,
         prevChildren,
-        element,
+        getElement,
         nextClientRect,
         settings,
         disabled,
@@ -45,12 +45,11 @@ export const useEnterAnimation = (props: EnterAnimationProps) => {
         }
 
         if (isRunning.current) {
-            finish();
             return;
         }
 
         isRunning.current = true;
-        enterAnimation.current = animateEnter(element, nextClientRect, settings);
+        enterAnimation.current = animateEnter(getElement(), nextClientRect, settings);
 
         finish();
     });

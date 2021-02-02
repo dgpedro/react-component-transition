@@ -17,7 +17,7 @@ export const useContainerAnimation = (props: ContainerAnimationProps) => {
         nextClientRect,
         animateContainer,
         onFinish,
-        element,
+        getElement,
         disabled,
     } = props;
 
@@ -39,20 +39,19 @@ export const useContainerAnimation = (props: ContainerAnimationProps) => {
             return;
         }
 
-        if (!element || !animateContainer || !prevClientRect || disabled) {
+        if (!getElement() || !animateContainer || !prevClientRect || disabled) {
             onFinish();
             return;
         }
 
         if (isRunning.current) {
-            finish();
             return;
         }
 
         isRunning.current = true;
 
         transitionAnimation.current = startAnimation(
-            element,
+            getElement(),
             prevClientRect,
             nextClientRect,
             props.animateContainerDuration,

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback } from "react";
+import React, { useRef, useEffect, useState, useCallback, useLayoutEffect } from "react";
 import classnames from "classnames";
 
 import { TransitionState } from "./animation-hooks/types";
@@ -14,6 +14,7 @@ import { ComponentTransitionProps } from "../types";
 import { defaultTransitionDuration, defaultTransitionEasing } from "../animations/defaults";
 
 interface Props extends ComponentTransitionProps {
+    inViewEnabled?: boolean;
     inViewRef?: (element: HTMLElement) => void;
 }
 
@@ -30,15 +31,18 @@ export const Transition: React.FC<Props> = ({
     enterAnimation,
     exitAnimation,
     inViewRef,
+    inViewEnabled,
     lazy,
     onEnterFinished,
     onExitFinished,
     style,
 }) => {
 
-    const [transitionState, setTransitionState] = useState<TransitionState>(null);
+    const [transitionState, setTransitionState] = useState<TransitionState>(
+        children && !lazy && animateOnMount && !animateContainer ? TransitionState.ContainerRect : null
+    );
 
-    const prevChildren = useRef<React.ReactNode>(animateOnMount ? null : children);
+    const prevChildren = useRef<React.ReactNode>(animateOnMount && animateContainer ? null : children);
     const containerRef = useRef<HTMLDivElement>(null);
     const unmounted = useRef(false);
 
@@ -48,7 +52,19 @@ export const Transition: React.FC<Props> = ({
         prevChildren.current = children;
     }
 
+    const udpatedState = (state: TransitionState) => {
+        if (!unmounted.current) {
+            setTransitionState(state);
+        }
+    };
+
     useEffect(() => () => unmounted.current = true, []);
+
+    useLayoutEffect(() => {
+        if (inViewEnabled && animateOnMount && !animateContainer) {
+            udpatedState(TransitionState.ContainerRect);
+        }
+    }, [inViewEnabled]);
 
     // start exit transition if children changed
     useEffect(() => {
@@ -57,19 +73,13 @@ export const Transition: React.FC<Props> = ({
         }
 
         if (!transitionState) {
-            setTransitionState(TransitionState.Exit);
+            udpatedState(TransitionState.Exit);
         }
     });
 
-    const udpatedState = (state: TransitionState) => {
-        if (!unmounted.current) {
-            setTransitionState(state);
-        }
-    };
-
     const animationHooks: AnimationHook = {
         children,
-        element: containerRef.current,
+        getElement: () => containerRef.current,
         prevChildren: prevChildren.current,
         transitionState,
         disabled,
@@ -87,12 +97,12 @@ export const Transition: React.FC<Props> = ({
 
     useExitAnimation({
         ...animationHooks,
-        prevClientRect: prevClientRect,
+        prevClientRect,
         settings: exitAnimation,
         onFinish: () => {
             const hadPrevChildren = !!prevChildren.current;
             prevChildren.current = children;
-            if (hadPrevChildren && prevChildren.current) {
+            if (hadPrevChildren && !animateContainer) {
                 exitFinishedHandler();
             }
             udpatedState(TransitionState.ContainerRect);
@@ -107,7 +117,7 @@ export const Transition: React.FC<Props> = ({
         animateContainerDuration,
         animateContainerEasing,
         onFinish: () => {
-            if (!prevChildren.current) {
+            if (!prevChildren.current && animateContainer) {
                 exitFinishedHandler();
             }
             udpatedState(TransitionState.Enter);
@@ -127,7 +137,10 @@ export const Transition: React.FC<Props> = ({
     });
 
     const shouldRenderPrevChildren = hasChildrenChanged || transitionState === TransitionState.Exit;
-    const hideContent = transitionState === TransitionState.Container;
+    const hideContent =
+        (lazy && !inViewEnabled) ||
+        transitionState === TransitionState.ContainerRect ||
+        transitionState === TransitionState.Container;
 
     const setRefs = useCallback(
         (element: HTMLDivElement) => {

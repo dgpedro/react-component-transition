@@ -112,7 +112,7 @@ const Component = () => {
 
 ```javascript
 import { useLocation } from "react-router-dom";
-const AppRoutes: React.FC = () => {
+const AppRoutes = () => {
     const location = useLocation();
     return (
         <ComponentTransition
@@ -131,7 +131,7 @@ const AppRoutes: React.FC = () => {
 
 ```javascript
 import { BrowserRouter } from "react-router-dom";
-const App: React.FC = () => (
+const App = () => (
     <BrowserRouter>
         <AppRoutes />
     </BrowserRouter>
