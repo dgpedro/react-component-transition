@@ -1,6 +1,6 @@
 {
   "name": "react-component-transition",
-  "version": "1.1.6",
+  "version": "2.0.0",
   "description": "Easy animations between react component transitions.",
   "main": "./build/cjs/index.js",
   "module": "./build/esm/index.js",
@@ -8,9 +8,8 @@
   "scripts": {
     "build": "rimraf docs && webpack --color --mode production",
     "build-dev": "rimraf docs && webpack --color --mode development",
-    "prepare": "rimraf build && npm run tsc && npm run polyfill",
+    "prepare": "rimraf build && npm run tsc",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
-    "polyfill": "tsc -p tsconfig-polyfill.json",
     "prestart": "rimraf docs",
     "start": "webpack-dev-server --mode development"
   },
@@ -37,11 +36,8 @@
     "@types/classnames": "^2.2.10",
     "@types/uniqid": "^5.2.0",
     "classnames": "^2.2.6",
-    "core-js": "^3.6.5",
-    "intersection-observer": "^0.11.0",
     "react-intersection-observer": "^8.26.2",
-    "uniqid": "^5.2.0",
-    "web-animations-js": "^2.3.2"
+    "uniqid": "^5.2.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.8",

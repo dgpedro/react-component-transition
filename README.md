@@ -28,23 +28,11 @@ With a couple of code lines, it's possible to make any react page much more inte
 
 ## Polyfills
 
-- **[Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API)**
-- **[Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)** (only if `lazy` prop set to `true`)
-- **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)**
+Depending on the browser to support, some polyfills might be needed:
 
-If needed, polyfills can be imported individually:
-
-```javascript
-import "react-component-transition/build/polyfill/web-animations-api";
-import "react-component-transition/build/polyfill/intersection-observer";
-import "react-component-transition/build/polyfill/promise";
-```
-
-or all at once:
-
-```javascript
-import "react-component-transition/build/polyfill";
-```
+- **[Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API#browser_support)**
+- **[Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#browser_compatibility)** (only if `lazy` prop set to `true`)
+- **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise#browser_compatibility)**
 
 ## Usage
 
