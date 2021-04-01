@@ -1,6 +1,6 @@
 {
   "name": "react-component-transition",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Easy animations between react component transitions.",
   "main": "./build/cjs/index.js",
   "module": "./build/esm/index.js",
