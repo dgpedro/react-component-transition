@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Presets } from "../../../../src";
+import { ComponentTransition, AnimationTypes } from "../../../../src";
 import { Box, BoxColor } from "../../components";
 
 export const SlideUp: React.FC = () => {
@@ -12,17 +12,26 @@ export const SlideUp: React.FC = () => {
     };
 
     return (
-        <div style={styles.container}>
-            <button style={styles.button} onClick={onClick}>
+        <div className="slide-up-container" style={styles.container}>
+            <button id="slide-up-button" style={styles.button} onClick={onClick}>
                 <span style={styles.text}>{show ? "Less" : "More"}</span>
                 <span style={show ? styles.arrowUp : styles.arrowDown}></span>
             </button>
             <div style={styles.transitionContainer}>
-                <Presets.TransitionSlideUp>
+                <ComponentTransition
+                    enterAnimation={AnimationTypes.slideUp.enter}
+                    exitAnimation={{
+                        ...AnimationTypes.slideUp.exit,
+                        options: {
+                            ...AnimationTypes.slideUp.exit.options,
+                            duration: 800,
+                        },
+                    }}
+                >
                     {
                         show && <Box color={BoxColor.yellowGreen} />
                     }
-                </Presets.TransitionSlideUp>
+                </ComponentTransition>
             </div>
         </div>
     );
