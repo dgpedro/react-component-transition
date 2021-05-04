@@ -12,18 +12,18 @@ module.exports = (env, options) => {
     return {
         devtool: isDev && "cheap-module-source-map",
         entry: {
-            'examples': './examples/src/index'
+            'examples': path.resolve(__dirname, 'index')
         },
         output: {
-            path: path.join(__dirname, "docs"),
+            path: path.join(__dirname, "../../docs"),
             filename: isDev ? "[name].js" : "[name].[hash].js",
         },
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
-            modules: [
-                path.resolve('./src'),
-                path.resolve(__dirname, 'node_modules')
-            ]
+            // modules: [
+            //     path.resolve('./src'),
+            //     path.resolve(__dirname, 'node_modules')
+            // ]
         },
         module: {
             rules: [
@@ -50,7 +50,7 @@ module.exports = (env, options) => {
         },
         plugins: [
             new HtmlWebpackPlugin({
-                template: 'examples/src/index.html',
+                template: path.resolve(__dirname, 'index.html'),
             }),
             new ForkTsCheckerWebpackPlugin(),
             // new BundleAnalyzerPlugin(),
@@ -59,7 +59,7 @@ module.exports = (env, options) => {
             compress: true,
             overlay: true,
             port: 8080,
-            contentBase: path.join(__dirname, 'docs'),
+            contentBase: path.join(__dirname, '../../docs'),
             publicPath: "/react-component-transition/",
             writeToDisk: true,
             historyApiFallback: {

@@ -6,12 +6,16 @@
   "module": "./build/esm/index.js",
   "sideEffects": false,
   "scripts": {
-    "build": "rimraf docs && webpack --color --mode production",
-    "build-dev": "rimraf docs && webpack --color --mode development",
+    "build-examples": "webpack --config apps/examples/webpack.config.js --color --mode production",
+    "build-examples-dev": "webpack --config apps/examples/webpack.config.js --color --mode development",
+    "build": "rimraf docs && npm run build-examples",
+    "build-dev": "rimraf docs && npm run build-examples-dev",
+    "": "-------------------------------------------------------------------------------",
+    "start-examples": "webpack-dev-server --config apps/examples/webpack.config.js --mode development",
+    "-": "-------------------------------------------------------------------------------",
     "prepare": "rimraf build && npm run tsc",
     "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
     "prestart": "rimraf docs",
-    "start": "webpack-dev-server --mode development",
     "cypress:open": "cypress open"
   },
   "repository": {
