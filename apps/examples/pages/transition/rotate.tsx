@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Box, BoxColor } from "../../components";
-import { Presets } from "../../../../src";
+import { Presets } from "@src";
 
 export const Rotate: React.FC = () => {
     const [showDetails, setShowDetails] = useState(false);

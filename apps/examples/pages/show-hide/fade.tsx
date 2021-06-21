@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Box } from "../../components";
-import { Presets } from "../../../../src";
+import { Presets } from "@src";
 
 export const Fade: React.FC = () => {
 

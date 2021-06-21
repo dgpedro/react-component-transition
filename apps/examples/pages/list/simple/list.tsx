@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Box, BoxColor, Size } from "../../../components";
-import { ComponentTransitionList, ComponentTransition, Presets, AnimationTypes } from "../../../../../src";
+import { ComponentTransitionList, ComponentTransition, Presets, AnimationTypes } from "@src";
 
 export const List = () => {
     const [items, setItems] = useState<BoxColor[]>([randomColor()]);

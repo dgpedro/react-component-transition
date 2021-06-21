@@ -6,25 +6,18 @@
     "esModuleInterop": true,
     "importHelpers": true,
     "jsx": "react",
-    "module": "ES2020",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "outDir": "./build/esm",
     "sourceMap": false,
     "strictBindCallApply": true,
     "target": "es5",
-    "lib": [
-      "dom",
-      "es5",
-      "scripthost",
-      "es6"
-    ]
-  },
-  "include": [
-    "./src"
-  ]
+    "lib": ["dom", "es5", "scripthost", "es6"],
+    "paths": {
+      "@src": ["src/index.ts"]
+    }
+  }
 }

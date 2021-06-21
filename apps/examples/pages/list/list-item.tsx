@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ComponentTransition, AnimationTypes, AnimationSettings } from "../../../../src";
+import { ComponentTransition, AnimationTypes, AnimationSettings } from "@src";
 import { Box, BoxColor, Size } from "../../components";
 
 interface Props {

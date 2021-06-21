@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { Box, BoxColor } from "../../components";
-import { ComponentTransition, AnimationTypes } from "../../../../src";
+import { ComponentTransition, AnimationTypes } from "@src";
 
 enum Direction {
     Right,

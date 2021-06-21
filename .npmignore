@@ -8,4 +8,5 @@
 .babelrc
 tsconfig.json
 tsconfig-cjs.json
+tsconfig-esm.json
 webpack.config.js

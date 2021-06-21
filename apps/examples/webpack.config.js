@@ -3,6 +3,7 @@
 const path = require('path');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = (env, options) => {
@@ -20,10 +21,7 @@ module.exports = (env, options) => {
         },
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
-            // modules: [
-            //     path.resolve('./src'),
-            //     path.resolve(__dirname, 'node_modules')
-            // ]
+            plugins: [new TsconfigPathsPlugin()],
         },
         module: {
             rules: [
@@ -52,7 +50,11 @@ module.exports = (env, options) => {
             new HtmlWebpackPlugin({
                 template: path.resolve(__dirname, 'index.html'),
             }),
-            new ForkTsCheckerWebpackPlugin(),
+            new ForkTsCheckerWebpackPlugin({
+                typescript: {
+                    configFile: path.join(__dirname, '../../tsconfig-esm.json'),
+                }
+            }),
             // new BundleAnalyzerPlugin(),
         ],
         devServer: {

@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import uniqid from "uniqid";
 
 import { BoxColor } from "../../../components";
-import { ComponentTransitionList } from "../../../../../src";
+import { ComponentTransitionList } from "@src";
 import { ListItem } from "./list-item";
 
 interface State {

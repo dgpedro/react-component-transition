@@ -4,4 +4,5 @@
       "module": "commonjs",
       "outDir": "./build/cjs"
     },
+    "include": ["./src"]
   }

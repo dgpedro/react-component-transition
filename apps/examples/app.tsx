@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Switch, Route, useLocation, Redirect } from "react-router-dom";
 import Media from 'react-media';
 
-import { ComponentTransition, AnimationTypes } from "../../src";
+import { ComponentTransition, AnimationTypes } from "@src";
 
 import { Menu } from "./menu";
 import { ShowHide } from "./pages/show-hide";
