@@ -12,6 +12,7 @@
     "build-dev": "rimraf docs && npm run build-examples-dev",
     "": "-------------------------------------------------------------------------------------------------",
     "start-examples": "webpack-dev-server --config apps/examples/webpack.config.js --mode development",
+    "start-tests": "webpack-dev-server --config apps/tests/webpack.config.js --mode development",
     "-": "------------------------------------------------------------------------------------------------",
     "prepare": "rimraf build && npm run tsc",
     "tsc": "tsc -p tsconfig-esm.json && tsc -p tsconfig-cjs.json",

@@ -1,8 +1,8 @@
-/examples
 /node_modules
 /.vscode
 /docs
 /src
+/apps
 
 .gitignore
 .babelrc
