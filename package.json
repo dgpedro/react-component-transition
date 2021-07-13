@@ -37,7 +37,7 @@
     "@types/uniqid": "^5.2.0",
     "classnames": "^2.2.6",
     "react-intersection-observer": "^8.26.2",
-    "uniqid": "^5.2.0"
+    "uniqid": "^5.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.8",
