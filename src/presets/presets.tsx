@@ -1,15 +1,29 @@
 import React from "react";
 
-import { TransitionProps, ComponentTransition } from "../index";
+import { TransitionProps, ComponentTransition, AnimationSettings } from "../index";
 import * as AnimationTypes from "../animations";
 
-export interface PresetProps extends TransitionProps { }
+export interface PresetProps extends TransitionProps {
+    duration?: number;
+}
+
+const getAnimations = (
+    enterAnimation: AnimationSettings,
+    exitAnimation: AnimationSettings,
+    { duration }: PresetProps
+) => {
+    const enterDuration = duration || enterAnimation.options.duration;
+    const exitDuration = duration || exitAnimation.options.duration;
+    return {
+        enterAnimation: { ...enterAnimation, options: { ...enterAnimation.options, duration: enterDuration } },
+        exitAnimation: { ...exitAnimation, options: { ...exitAnimation.options, duration: exitDuration } },
+    };
+};
 
 export const TransitionExpandVertical: React.FC<PresetProps> = (props) => (
     <ComponentTransition
         {...props}
-        enterAnimation={AnimationTypes.expand.vertical}
-        exitAnimation={AnimationTypes.collapse.vertical}
+        {...getAnimations(AnimationTypes.expand.vertical, AnimationTypes.collapse.vertical, props)}
         style={{
             overflow: "hidden",
             ...props.style,
@@ -23,8 +37,7 @@ TransitionExpandVertical.displayName = "TransitionExpandVertical";
 export const TransitionExpandHorizontal: React.FC<PresetProps> = (props) => (
     <ComponentTransition
         {...props}
-        enterAnimation={AnimationTypes.expand.horizontal}
-        exitAnimation={AnimationTypes.collapse.horizontal}
+        {...getAnimations(AnimationTypes.expand.horizontal, AnimationTypes.collapse.horizontal, props)}
         style={{
             overflow: "hidden",
             ...props.style,
@@ -39,8 +52,7 @@ export const TransitionSlideUp: React.FC<PresetProps> = (props) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
-        enterAnimation={AnimationTypes.slideUp.enter}
-        exitAnimation={AnimationTypes.slideUp.exit}
+        {...getAnimations(AnimationTypes.slideUp.enter, AnimationTypes.slideUp.exit, props)}
     >
         {props.children}
     </ComponentTransition>
@@ -51,8 +63,7 @@ export const TransitionSlideDown: React.FC<PresetProps> = (props) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
-        enterAnimation={AnimationTypes.slideDown.enter}
-        exitAnimation={AnimationTypes.slideDown.exit}
+        {...getAnimations(AnimationTypes.slideDown.enter, AnimationTypes.slideDown.exit, props)}
     >
         {props.children}
     </ComponentTransition>
@@ -63,8 +74,7 @@ export const TransitionSlideLeft: React.FC<PresetProps> = (props) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
-        enterAnimation={AnimationTypes.slideLeft.enter}
-        exitAnimation={AnimationTypes.slideLeft.exit}
+        {...getAnimations(AnimationTypes.slideLeft.enter, AnimationTypes.slideLeft.exit, props)}
     >
         {props.children}
     </ComponentTransition>
@@ -75,8 +85,7 @@ export const TransitionSlideRight: React.FC<PresetProps> = (props) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
-        enterAnimation={AnimationTypes.slideRight.enter}
-        exitAnimation={AnimationTypes.slideRight.exit}
+        {...getAnimations(AnimationTypes.slideRight.enter, AnimationTypes.slideRight.exit, props)}
     >
         {props.children}
     </ComponentTransition>
@@ -87,8 +96,7 @@ export const TransitionFade: React.FC<PresetProps> = (props) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
-        enterAnimation={AnimationTypes.fade.enter}
-        exitAnimation={AnimationTypes.fade.exit}
+        {...getAnimations(AnimationTypes.fade.enter, AnimationTypes.fade.exit, props)}
     >
         {props.children}
     </ComponentTransition>
@@ -99,32 +107,34 @@ export const TransitionScale: React.FC<PresetProps> = (props) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
-        enterAnimation={AnimationTypes.scale.enter}
-        exitAnimation={AnimationTypes.scale.exit}
+        {...getAnimations(AnimationTypes.scale.enter, AnimationTypes.scale.exit, props)}
     >
         {props.children}
     </ComponentTransition>
 );
 TransitionExpandVertical.displayName = "TransitionScale";
 
-export const TransitionRotate: React.FC<PresetProps> = (props) => (
-    <ComponentTransition
-        animateContainer={true}
-        {...props}
-        enterAnimation={[AnimationTypes.rotate.enter, AnimationTypes.fade.enter]}
-        exitAnimation={[AnimationTypes.rotate.exit, AnimationTypes.fade.exit]}
-    >
-        {props.children}
-    </ComponentTransition>
-);
+export const TransitionRotate: React.FC<PresetProps> = (props) => {
+    const rotate = getAnimations(AnimationTypes.rotate.enter, AnimationTypes.rotate.exit, props);
+    const fade = getAnimations(AnimationTypes.fade.enter, AnimationTypes.fade.exit, props);
+    return (
+        <ComponentTransition
+            animateContainer={true}
+            {...props}
+            enterAnimation={[rotate.enterAnimation, fade.enterAnimation]}
+            exitAnimation={[rotate.exitAnimation, fade.exitAnimation]}
+        >
+            {props.children}
+        </ComponentTransition>
+    )
+};
 TransitionExpandVertical.displayName = "TransitionRotate";
 
 export const TransitionRotateX: React.FC<PresetProps> = (props) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
-        enterAnimation={AnimationTypes.rotateX.enter}
-        exitAnimation={AnimationTypes.rotateX.exit}
+        {...getAnimations(AnimationTypes.rotateX.enter, AnimationTypes.rotateX.exit, props)}
     >
         {props.children}
     </ComponentTransition>
@@ -135,8 +145,7 @@ export const TransitionRotateY: React.FC<PresetProps> = (props) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
-        enterAnimation={AnimationTypes.rotateY.enter}
-        exitAnimation={AnimationTypes.rotateY.exit}
+        {...getAnimations(AnimationTypes.rotateY.enter, AnimationTypes.rotateY.exit, props)}
     >
         {props.children}
     </ComponentTransition>

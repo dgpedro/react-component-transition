@@ -16,7 +16,7 @@ module.exports = (env, options) => {
         },
         output: {
             path: path.join(__dirname, "docs"),
-            filename: isDev ? "[name].js" : "[name].[hash].js",
+            filename: isDev ? "[name].js" : "[name].[contenthash].js",
         },
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
