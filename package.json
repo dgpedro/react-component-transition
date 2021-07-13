@@ -1,6 +1,6 @@
 {
   "name": "react-component-transition",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Easy animations between react component transitions.",
   "main": "./build/cjs/index.js",
   "module": "./build/esm/index.js",
@@ -33,9 +33,9 @@
   },
   "homepage": "https://github.com/dgpedro/react-component-transition#readme",
   "dependencies": {
-    "@types/classnames": "^2.2.10",
-    "@types/uniqid": "^5.2.0",
-    "classnames": "^2.2.6",
+    "@types/classnames": "^2.3.1",
+    "@types/uniqid": "^5.3.1",
+    "classnames": "^2.3.1",
     "react-intersection-observer": "^8.26.2",
     "uniqid": "^5.3.0"
   },
