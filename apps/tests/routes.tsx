@@ -1,10 +1,10 @@
 const routes = {
-    toNull: {
-        name: "component -> null",
-        path: "/to-from-null"
+    showHide: {
+        name: "Show / Hide",
+        path: "/show-hide"
     },
     simple: {
-        name: "component -> component",
+        name: "Simple transition",
         path: "/simple",
     },
 };
