@@ -1,9 +1,11 @@
 import React from "react";
 
-import {Presets} from "@src";
+import {SlideRight} from "./slide-right";
 
 export const ShowHide: React.FC = () => {
     return (
-        <div>Show Hide</div>
+        <div>
+            <SlideRight />
+        </div>
     );
 };
