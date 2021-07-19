@@ -42,7 +42,7 @@ module.exports = (env, options) => {
             }),
             new ForkTsCheckerWebpackPlugin({
                 typescript: {
-                    configFile: path.join(__dirname, '../tsconfig-esm.json'),
+                    configFile: path.join(__dirname, './tsconfig.json'),
                 }
             }),
             // new BundleAnalyzerPlugin(),
