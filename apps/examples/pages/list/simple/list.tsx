@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Box, BoxColor, Size } from "../../../components";
+import { Box, BoxColor, Size } from "@apps/shared/box";
 import { ComponentTransitionList, ComponentTransition, Presets, AnimationTypes } from "@src";
 
 export const List = () => {

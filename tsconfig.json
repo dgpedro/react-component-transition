@@ -17,7 +17,8 @@
     "target": "es5",
     "lib": ["dom", "es5", "scripthost", "es6"],
     "paths": {
-      "@src": ["src/index.ts"]
+      "@src": ["src/index.ts"],
+      "@apps/*": ["./apps/*"]
     }
   }
 }

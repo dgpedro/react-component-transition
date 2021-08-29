@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { ComponentTransition, AnimationTypes } from "@src";
-import { Box, BoxColor } from "../../components";
+import { Box, BoxColor } from "@apps/shared/box";
 
 export const SlideUp: React.FC = () => {
 

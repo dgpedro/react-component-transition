@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Box, BoxColor } from "../../components";
+import { Box, BoxColor } from "@apps/shared/box";
 import { ComponentTransition, AnimationTypes } from "@src";
 
 enum Direction {

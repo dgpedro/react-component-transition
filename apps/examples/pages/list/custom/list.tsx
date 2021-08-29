@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import uniqid from "uniqid";
 
-import { BoxColor } from "../../../components";
+import { BoxColor } from "@apps/shared/box";
 import { ComponentTransitionList } from "@src";
 import { ListItem } from "./list-item";
 
