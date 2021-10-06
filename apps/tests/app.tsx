@@ -4,20 +4,20 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { Navigator } from "./navigator";
 import routes from "./routes";
 
-import { ShowHide } from "./pages/show-hide";
+import { Hide } from "./pages/hide";
 
 export const App = () => {
     return (
         <BrowserRouter>
             <Navigator />
             <Switch>
-                <Route path={routes.showHide.path}>
-                    <ShowHide />
+                <Route path={routes.hide.path}>
+                    <Hide />
                 </Route>
-                <Route path={routes.simple.path}>
+                <Route path={routes.transition.path}>
                     <div>Simple</div>
                 </Route>
-                <Redirect to={routes.showHide.path} />
+                <Redirect to={routes.hide.path} />
             </Switch>
         </BrowserRouter>
     );

@@ -1,11 +1,11 @@
 const routes = {
-    showHide: {
-        name: "Show / Hide",
-        path: "/show-hide"
+    hide: {
+        name: "Hide",
+        path: "/hide"
     },
-    simple: {
-        name: "Simple transition",
-        path: "/simple",
+    transition: {
+        name: "Transition",
+        path: "/transition",
     },
 };
 
