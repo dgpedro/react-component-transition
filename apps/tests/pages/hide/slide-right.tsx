@@ -12,9 +12,9 @@ export const SlideRight: React.FC = () => {
 
     return (
         <div id="slide-right" style={{ width: "130px" }}>
-            <input type="checkbox" id="slide-right_check" onChange={onCheck} checked={show} />
+            <input type="checkbox" id="slide-right-check" onChange={onCheck} checked={show} />
             <Presets.TransitionSlideRight duration={1000}>
-                {show && <Box color={BoxColor.blueRed} />}
+                {show && <Box id="slide-right-box" color={BoxColor.blueRed} />}
             </Presets.TransitionSlideRight>
         </div>
     );

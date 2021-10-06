@@ -15,11 +15,13 @@ export enum Size {
 
 interface BoxProps {
     color?: BoxColor;
+    id?: string;
     size?: Size;
 }
 
 export const Box: React.FC<BoxProps> = ({
     color,
+    id,
     size,
     children,
 }) => {
@@ -28,6 +30,7 @@ export const Box: React.FC<BoxProps> = ({
 
     return (
         <div
+            id={id}
             style={style}
         >
             {children}
