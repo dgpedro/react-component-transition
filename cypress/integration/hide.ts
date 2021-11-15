@@ -3,12 +3,11 @@ describe("Hide", () => {
         cy.visit("http://localhost:9000/hide")
             .then(() => {
                 cy.get("#slide-right-check").click();
-                
                 cy.wait(800);
-                
+
                 cy.get("#slide-right").toMatchImageSnapshot();
                 cy.get("#slide-right-box").should('not.exist');
-            })
+            });
     });
 
     it("Show", () => {
@@ -16,12 +15,24 @@ describe("Hide", () => {
             .then(() => {
                 cy.get("#slide-right-check").click();
                 cy.wait(1100);
-                
                 cy.get("#slide-right-check").click();
                 cy.wait(300);
-                
+
                 cy.get("#slide-right").toMatchImageSnapshot();
                 cy.get("#slide-right-box").should('exist');
-            })
+            });
+    });
+
+    it("Check when hide did not finish", () => {
+        cy.visit("http://localhost:9000/hide")
+            .then(() => {
+                cy.get("#slide-right-check").click();
+                cy.wait(600);
+                cy.get("#slide-right-check").click();
+                cy.wait(700);
+
+                cy.get("#slide-right").toMatchImageSnapshot();
+                cy.get("#slide-right-box").should('exist');
+            });
     });
 });
