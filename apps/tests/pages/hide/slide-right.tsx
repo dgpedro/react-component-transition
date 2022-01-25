@@ -11,10 +11,11 @@ export const SlideRight: React.FC = () => {
     };
 
     return (
-        <div id="slide-right" style={{ width: "130px" }}>
+        <div id="slide-right" style={{ width: "200px" }}>
             <input type="checkbox" id="slide-right-check" onChange={onCheck} checked={show} />
             <Presets.TransitionSlideRight duration={1000}>
                 {show && <Box id="slide-right-box" color={BoxColor.blueRed} />}
+                {/* {show && <div id="slide-right-box">Some text</div>} */}
             </Presets.TransitionSlideRight>
         </div>
     );
