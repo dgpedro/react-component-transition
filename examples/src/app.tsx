@@ -40,7 +40,7 @@ export const AppMobile: React.FC = () => (
     </div>
 );
 
-const AppRoutes: React.FC<{ isMobile: boolean }> = ({ isMobile }) => {
+const AppRoutes = ({ isMobile }: { isMobile: boolean }) => {
     const location = useLocation();
     return (
         <ComponentTransition

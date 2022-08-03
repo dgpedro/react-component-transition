@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, NavLinkProps } from "react-router-dom";
 import Media from 'react-media';
 
-export const MenuItem: React.FC<NavLinkProps> = (props) => {
+export const MenuItem = (props: NavLinkProps) => {
     return (
         <Media query={{ maxWidth: 599 }}>
             {matches => (

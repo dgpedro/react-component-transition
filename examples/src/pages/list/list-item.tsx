@@ -10,12 +10,12 @@ interface Props {
     onRemove: (index: number) => void;
 }
 
-export const ListItem: React.FC<Props> = React.memo(({
+export const ListItem = React.memo(({
     index,
     color,
     onAdd,
     onRemove,
-}) => {
+}: Props) => {
     return (
         <div style={styles.listItemContainer}>
             <ComponentTransition

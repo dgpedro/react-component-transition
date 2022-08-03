@@ -18,7 +18,7 @@ interface Props extends ComponentTransitionProps {
     inViewRef?: (element: HTMLElement) => void;
 }
 
-export const Transition: React.FC<Props> = ({
+export const Transition = ({
     animateContainer,
     animateContainerDuration,
     animateContainerEasing,
@@ -36,7 +36,7 @@ export const Transition: React.FC<Props> = ({
     onEnterFinished,
     onExitFinished,
     style,
-}) => {
+}: React.PropsWithChildren<Props>) => {
 
     const [transitionState, setTransitionState] = useState<TransitionState>(
         children && !lazy && animateOnMount && !animateContainer ? TransitionState.ContainerRect : null
@@ -58,7 +58,7 @@ export const Transition: React.FC<Props> = ({
         }
     };
 
-    useEffect(() => () => unmounted.current = true, []);
+    useEffect(() => () => { unmounted.current = true; }, []);
 
     useLayoutEffect(() => {
         if (inViewEnabled && animateOnMount && !animateContainer) {

@@ -11,13 +11,13 @@ interface Props {
     canRemove: boolean;
 }
 
-export const ListItem: React.FC<Props> = React.memo(({
+export const ListItem = React.memo(({
     index,
     color,
     onAdd,
     onRemove,
     canRemove,
-}) => {
+}: Props) => {
     return (
         <div style={styles.listItemContainer}>
             <ComponentTransition

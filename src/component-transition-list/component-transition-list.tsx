@@ -7,9 +7,9 @@ interface TransitionListProps {
     children: React.ReactElement[];
 }
 
-export const ComponentTransitionList: React.FC<TransitionListProps> = ({
+export const ComponentTransitionList = ({
     children
-}) => {
+}: React.PropsWithChildren<TransitionListProps>) => {
     const [, forceUpdate] = useState(0);
 
     const {

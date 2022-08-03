@@ -8,7 +8,7 @@ interface LazyTransitionProps extends ComponentTransitionProps {
     inViewOptions?: IntersectionOptions;
 }
 
-export const LazyTransition: React.FC<LazyTransitionProps> = (props) => {
+export const LazyTransition = (props: React.PropsWithChildren<LazyTransitionProps>) => {
     const { animateOnMount, animateContainer, children, disabled, inViewOptions } = props;
     const [inViewRef, inView, entry] = useInView(inViewOptions);
 

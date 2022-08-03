@@ -20,7 +20,7 @@ const getAnimations = (
     };
 };
 
-export const TransitionExpandVertical: React.FC<PresetProps> = (props) => (
+export const TransitionExpandVertical = (props: React.PropsWithChildren<PresetProps>) => (
     <ComponentTransition
         {...props}
         {...getAnimations(AnimationTypes.expand.vertical, AnimationTypes.collapse.vertical, props)}
@@ -34,7 +34,7 @@ export const TransitionExpandVertical: React.FC<PresetProps> = (props) => (
 );
 TransitionExpandVertical.displayName = "TransitionExpandVertical";
 
-export const TransitionExpandHorizontal: React.FC<PresetProps> = (props) => (
+export const TransitionExpandHorizontal = (props: React.PropsWithChildren<PresetProps>) => (
     <ComponentTransition
         {...props}
         {...getAnimations(AnimationTypes.expand.horizontal, AnimationTypes.collapse.horizontal, props)}
@@ -48,7 +48,7 @@ export const TransitionExpandHorizontal: React.FC<PresetProps> = (props) => (
 );
 TransitionExpandVertical.displayName = "TransitionExpandHorizontal";
 
-export const TransitionSlideUp: React.FC<PresetProps> = (props) => (
+export const TransitionSlideUp = (props: React.PropsWithChildren<PresetProps>) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
@@ -59,7 +59,7 @@ export const TransitionSlideUp: React.FC<PresetProps> = (props) => (
 );
 TransitionExpandVertical.displayName = "TransitionSlideUp";
 
-export const TransitionSlideDown: React.FC<PresetProps> = (props) => (
+export const TransitionSlideDown = (props: React.PropsWithChildren<PresetProps>) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
@@ -70,7 +70,7 @@ export const TransitionSlideDown: React.FC<PresetProps> = (props) => (
 );
 TransitionExpandVertical.displayName = "TransitionSlideDown";
 
-export const TransitionSlideLeft: React.FC<PresetProps> = (props) => (
+export const TransitionSlideLeft = (props: React.PropsWithChildren<PresetProps>) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
@@ -81,7 +81,7 @@ export const TransitionSlideLeft: React.FC<PresetProps> = (props) => (
 );
 TransitionExpandVertical.displayName = "TransitionSlideLeft";
 
-export const TransitionSlideRight: React.FC<PresetProps> = (props) => (
+export const TransitionSlideRight = (props: React.PropsWithChildren<PresetProps>) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
@@ -92,7 +92,7 @@ export const TransitionSlideRight: React.FC<PresetProps> = (props) => (
 );
 TransitionExpandVertical.displayName = "TransitionSlideRight";
 
-export const TransitionFade: React.FC<PresetProps> = (props) => (
+export const TransitionFade = (props: React.PropsWithChildren<PresetProps>) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
@@ -103,7 +103,7 @@ export const TransitionFade: React.FC<PresetProps> = (props) => (
 );
 TransitionExpandVertical.displayName = "TransitionFade";
 
-export const TransitionScale: React.FC<PresetProps> = (props) => (
+export const TransitionScale = (props: React.PropsWithChildren<PresetProps>) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
@@ -114,7 +114,7 @@ export const TransitionScale: React.FC<PresetProps> = (props) => (
 );
 TransitionExpandVertical.displayName = "TransitionScale";
 
-export const TransitionRotate: React.FC<PresetProps> = (props) => {
+export const TransitionRotate = (props: React.PropsWithChildren<PresetProps>) => {
     const rotate = getAnimations(AnimationTypes.rotate.enter, AnimationTypes.rotate.exit, props);
     const fade = getAnimations(AnimationTypes.fade.enter, AnimationTypes.fade.exit, props);
     return (
@@ -130,7 +130,7 @@ export const TransitionRotate: React.FC<PresetProps> = (props) => {
 };
 TransitionExpandVertical.displayName = "TransitionRotate";
 
-export const TransitionRotateX: React.FC<PresetProps> = (props) => (
+export const TransitionRotateX = (props: React.PropsWithChildren<PresetProps>) => (
     <ComponentTransition
         animateContainer={true}
         {...props}
@@ -141,7 +141,7 @@ export const TransitionRotateX: React.FC<PresetProps> = (props) => (
 );
 TransitionExpandVertical.displayName = "TransitionRotateX";
 
-export const TransitionRotateY: React.FC<PresetProps> = (props) => (
+export const TransitionRotateY = (props: React.PropsWithChildren<PresetProps>) => (
     <ComponentTransition
         animateContainer={true}
         {...props}

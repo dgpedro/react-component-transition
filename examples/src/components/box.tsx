@@ -18,11 +18,11 @@ interface BoxProps {
     size?: Size;
 }
 
-export const Box: React.FC<BoxProps> = ({
+export const Box = ({
     color,
     size,
     children,
-}) => {
+}: React.PropsWithChildren<BoxProps>) => {
 
     const style = { ...sizeStyles[size], ...colorStyles[color] };
 
