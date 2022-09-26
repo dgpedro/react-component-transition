@@ -42,7 +42,9 @@ export interface TransitionProps extends ContainerProps, StyleProps, HandlerProp
 
 export type AnimationSettingsProp = AnimationSettings | AnimationSettings[];
 
-export interface ComponentTransitionProps extends TransitionProps {
+export interface AnimationSettingsProps {
     exitAnimation?: AnimationSettingsProp;
     enterAnimation?: AnimationSettingsProp;
 }
+
+export interface ComponentTransitionProps extends TransitionProps, AnimationSettingsProps {}

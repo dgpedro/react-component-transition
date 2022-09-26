@@ -1,17 +1,10 @@
-import React, { useRef, useEffect, useState, useCallback, useLayoutEffect } from "react";
+import React, { useRef, useCallback } from "react";
 import classnames from "classnames";
-
-import { TransitionState } from "./animation-hooks/types";
-import {
-    AnimationHook,
-    useContainerRectangle,
-    useExitAnimation,
-    useContainerAnimation,
-    useEnterAnimation,
-} from "./animation-hooks";
 
 import { ComponentTransitionProps } from "../types";
 import { defaultTransitionDuration, defaultTransitionEasing } from "../animations/defaults";
+
+import { useTransition } from "./use-transition";
 
 interface Props extends ComponentTransitionProps {
     inViewEnabled?: boolean;
@@ -22,125 +15,41 @@ export const Transition = ({
     animateContainer,
     animateContainerDuration,
     animateContainerEasing,
-    animateOnMount,
     children,
     className,
-    classNameEnter,
-    classNameExit,
-    disabled,
     enterAnimation,
     exitAnimation,
     inViewRef,
-    inViewEnabled,
-    lazy,
-    onEnterFinished,
     onExitFinished,
     style,
 }: React.PropsWithChildren<Props>) => {
 
-    const [transitionState, setTransitionState] = useState<TransitionState>(
-        children && !lazy && animateOnMount && !animateContainer ? TransitionState.ContainerRect : null
-    );
-
-    const prevChildren = useRef<React.ReactNode>(animateOnMount && animateContainer ? null : children);
+    const prevChildren = useRef<React.ReactNode>(children);
     const containerRef = useRef<HTMLDivElement>(null);
-    const unmounted = useRef(false);
 
-    const hasChildrenChanged = didChildrenChanged(prevChildren.current, children);
-
-    if (!hasChildrenChanged && !transitionState) {
+    const onExited = () => {
+        const hadPrevChildren = !!prevChildren.current;
         prevChildren.current = children;
-    }
-
-    const udpatedState = (state: TransitionState) => {
-        if (!unmounted.current) {
-            setTransitionState(state);
+        if (hadPrevChildren && !animateContainer) {
+            onExitFinished?.();
         }
     };
 
-    useEffect(() => () => { unmounted.current = true; }, []);
-
-    useLayoutEffect(() => {
-        if (inViewEnabled && animateOnMount && !animateContainer) {
-            udpatedState(TransitionState.ContainerRect);
-        }
-    }, [inViewEnabled]);
-
-    // start exit transition if children changed
-    useEffect(() => {
-        if (!hasChildrenChanged) {
-            return;
-        }
-
-        if (!transitionState) {
-            udpatedState(TransitionState.Exit);
-        }
-    });
-
-    const animationHooks: AnimationHook = {
-        children,
-        getElement: () => containerRef.current,
-        prevChildren: prevChildren.current,
+    const {
+        childrenToRender,
         transitionState,
-        disabled,
-        onFinish: null,
-    };
-
-    const { nextClientRect, prevClientRect } = useContainerRectangle({
-        ...animationHooks,
-        onFinish: () => udpatedState(TransitionState.Container),
-    });
-
-    const exitFinishedHandler = () => {
-        onExitFinished && onExitFinished();
-    };
-
-    useExitAnimation({
-        ...animationHooks,
-        prevClientRect,
-        settings: exitAnimation,
-        onFinish: () => {
-            const hadPrevChildren = !!prevChildren.current;
-            prevChildren.current = children;
-            if (hadPrevChildren && !animateContainer) {
-                exitFinishedHandler();
-            }
-            udpatedState(TransitionState.ContainerRect);
-        },
-    });
-
-    useContainerAnimation({
-        ...animationHooks,
-        prevClientRect,
-        nextClientRect,
+    } = useTransition({
         animateContainer,
         animateContainerDuration,
         animateContainerEasing,
-        onFinish: () => {
-            if (!prevChildren.current && animateContainer) {
-                exitFinishedHandler();
-            }
-            udpatedState(TransitionState.Enter);
-        },
+        children,
+        element: containerRef.current,
+        enterAnimation,
+        exitAnimation,
+        onExitFinished: onExited,
     });
 
-    useEnterAnimation({
-        ...animationHooks,
-        nextClientRect,
-        settings: enterAnimation,
-        onFinish: () => {
-            if (prevChildren.current) {
-                onEnterFinished && onEnterFinished();
-            }
-            udpatedState(null);
-        },
-    });
-
-    const shouldRenderPrevChildren = hasChildrenChanged || transitionState === TransitionState.Exit;
-    const hideContent =
-        (lazy && !inViewEnabled) ||
-        transitionState === TransitionState.ContainerRect ||
-        transitionState === TransitionState.Container;
+    const hideContent = transitionState === "container";
 
     const setRefs = useCallback(
         (element: HTMLDivElement) => {
@@ -150,57 +59,23 @@ export const Transition = ({
         [inViewRef],
     )
 
-    if (!lazy && !hasChildrenChanged && !transitionState && !children) {
-        return null;
-    }
-
     return (
         <div
             ref={setRefs}
             className={
                 classnames(
                     className,
-                    transitionState === TransitionState.Enter && classNameEnter,
-                    transitionState === TransitionState.Exit && classNameExit,
+                    // transitionState === TransitionState.Enter && classNameEnter,
+                    // transitionState === TransitionState.Exit && classNameExit,
                 ) || null}
             style={{
                 ...style,
                 opacity: hideContent ? 0 : null,
             }}
         >
-            {
-                shouldRenderPrevChildren ?
-                    prevChildren.current :
-                    children
-            }
+            {childrenToRender}
         </div>
     );
-};
-
-const didChildrenChanged = (prevChildren: React.ReactNode, children: React.ReactNode) => {
-    const prevChildrenElement = prevChildren as React.ReactElement;
-    const childrenElement = children as React.ReactElement;
-
-    if (!prevChildren && !children) {
-        return false;
-    }
-
-    if (!prevChildren && children) {
-        return true;
-    }
-
-    if (prevChildren && !children) {
-        return true;
-    }
-
-    if (
-        prevChildrenElement.key === childrenElement.key &&
-        prevChildrenElement.type === childrenElement.type
-    ) {
-        return false;
-    }
-
-    return true;
 };
 
 Transition.defaultProps = {
