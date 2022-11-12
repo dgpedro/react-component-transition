@@ -1,9 +1,9 @@
 # react-component-transition
 
-Easy to use react component to apply animations between component transitions, by using **[Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API)**.
+It is easy to use the react component to apply animations between component transitions by using the **[Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API)**.
 
 ## Demo
-**[https://dgpedro.github.io/react-component-transition/](https://dgpedro.github.io/react-component-transition/)**
+If you want to try this application out here is the **[Demo](https://dgpedro.github.io/react-component-transition/)** link.
 
 ## Install
 
@@ -13,7 +13,7 @@ npm install react-component-transition --save
 ---
 **NOTE**
 
-_This package was built using react hooks therefore it requires minimum version `16.8.0` of reactjs._
+*This package was built using react hooks therefore it requires minimum version `16.8.0` of reactjs.*
 
 ---
 
@@ -23,12 +23,11 @@ Types are included in the package.
 
 ## Goal
 
-The main goal is to provide an easy and fast way to apply simple animations when transitioning from one component to another, without loosing too much time testing, adjusting, styling, etc...
-With a couple of code lines, it's possible to make any react page much more interactive and user friendly.
+The main goal is to provide an easy and fast way to apply simple animations when transitioning from one component to another without wasting too much time testing, adjusting, styling, etc. With a few lines of code, you can make any React page much more interactive and user friendly.
 
 ## Polyfills
 
-Depending on the browser to support, some polyfills might be needed:
+Some polyfills may be required depending on the browser:
 
 - **[Web Animations API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API#browser_support)**
 - **[Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#browser_compatibility)** (only if `lazy` prop set to `true`)
@@ -57,7 +56,7 @@ const Component = () => {
 
 ### Presets
 
-Presets are components that have `enterAnimation` and `exitAnimation` already set, for an easier and cleaner usage.
+Presets are components that have `enterAnimation` and `exitAnimation` already set for easier and cleaner usage.
 
 ```javascript
 import { Presets } from "react-component-transition";
@@ -176,7 +175,7 @@ const Component = () => {
 
 ### AnimationTypes
 
-`AnimationTypes` are a set of animations already defined that can be used in `enterAnimation` and/or `exitAnimation` props. Availabe ones are:
+`AnimationTypes` are a set of animations already defined that can be used in `enterAnimation` and/or `exitAnimation` props. Available ones are:
 
 ```
 collapse.(horizontal|vertical)
@@ -196,7 +195,7 @@ For each type of `AnimationTypes` there's a respective preset.
 
 ### props
 
-All presets and the `ComponentTransition` will wrap their `children` in a `div` element. This `div` is the element that will animate when `children` are unmounting or mounting and is also referenced here as "container". 
+All presets and the `ComponentTransition` will wrap their `children` in a `div` element. This `div` is the element that will animate when `children` are unmounting or mounting and is also referenced here as a "container". 
 
 Name | Type | Default | Description
 -----|------|---------|------------
