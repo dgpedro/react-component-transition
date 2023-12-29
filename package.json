@@ -70,9 +70,9 @@
     "webpack-dev-server": "^3.11.2"
   },
   "peerDependencies": {
-    "@types/react": "^16.8.5",
-    "@types/react-dom": "^16.8.5",
-    "react": "^16.8.0",
-    "react-dom": "^16.8.0"
+    "@types/react": "16.8.5 - 17",
+    "@types/react-dom": "16.8.5 - 17",
+    "react": "16.8.0 - 17",
+    "react-dom": "16.8.0 - 17"
   }
 }
