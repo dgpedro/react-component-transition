@@ -13,7 +13,7 @@ npm install react-component-transition --save
 ---
 **NOTE**
 
-_This package was built using react hooks therefore it requires minimum version `16.8.0` of reactjs._
+_This package was built using react hooks; therefore it requires minimum version `16.8.0` of reactjs._
 
 ---
 
@@ -23,8 +23,8 @@ Types are included in the package.
 
 ## Goal
 
-The main goal is to provide an easy and fast way to apply simple animations when transitioning from one component to another, without loosing too much time testing, adjusting, styling, etc...
-With a couple of code lines, it's possible to make any react page much more interactive and user friendly.
+The main goal is to provide an easy and fast way to apply simple animations when transitioning from one component to another - without losing too much time testing, adjusting, styling, etc...
+In just a couple of lines it's possible to make any react page much more interactive and user friendly.
 
 ## Polyfills
 
@@ -196,7 +196,7 @@ For each type of `AnimationTypes` there's a respective preset.
 
 ### props
 
-All presets and the `ComponentTransition` will wrap their `children` in a `div` element. This `div` is the element that will animate when `children` are unmounting or mounting and is also referenced here as "container". 
+All presets and the `ComponentTransition` will wrap their `children` in a `div` element. This `div` is the element that will animate when `children` are unmounting or mounting (it is referenced here as "container"). 
 
 Name | Type | Default | Description
 -----|------|---------|------------
