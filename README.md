@@ -10,12 +10,6 @@ Easy to use react component to apply animations between component transitions, b
 ```
 npm install react-component-transition --save
 ```
----
-**NOTE**
-
-_This package was built using react hooks; therefore it requires minimum version `16.8.0` of reactjs._
-
----
 
 ## Typescript
 
