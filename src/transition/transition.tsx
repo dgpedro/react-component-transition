@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback, useLayoutEffect } from "react";
+import React, { useRef, useEffect, useState, useCallback, useLayoutEffect, PropsWithChildren } from "react";
 import classnames from "classnames";
 
 import { TransitionState } from "./animation-hooks/types";
@@ -18,7 +18,7 @@ interface Props extends ComponentTransitionProps {
     inViewRef?: (element: HTMLElement) => void;
 }
 
-export const Transition: React.FC<Props> = ({
+export const Transition: React.FC<PropsWithChildren<Props>> = ({
     animateContainer,
     animateContainerDuration,
     animateContainerEasing,
@@ -58,7 +58,9 @@ export const Transition: React.FC<Props> = ({
         }
     };
 
-    useEffect(() => () => unmounted.current = true, []);
+    useEffect(() => () => {
+        unmounted.current = true;
+    }, []);
 
     useLayoutEffect(() => {
         if (inViewEnabled && animateOnMount && !animateContainer) {

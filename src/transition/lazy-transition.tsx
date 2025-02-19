@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import { useInView, IntersectionOptions } from "react-intersection-observer";
 
 import { ComponentTransitionProps } from "../types";
@@ -8,7 +8,7 @@ interface LazyTransitionProps extends ComponentTransitionProps {
     inViewOptions?: IntersectionOptions;
 }
 
-export const LazyTransition: React.FC<LazyTransitionProps> = (props) => {
+export const LazyTransition: React.FC<PropsWithChildren<LazyTransitionProps>> = (props) => {
     const { animateOnMount, animateContainer, children, disabled, inViewOptions } = props;
     const [inViewRef, inView, entry] = useInView(inViewOptions);
 

@@ -1,4 +1,4 @@
-import React, { Key, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import uniqid from "uniqid";
 
 import { ChildrenManagerOut, ChildrenMapper } from "./types";
@@ -53,7 +53,7 @@ export const useChildrenManager = (
     const inverted = invertMapper(childrenMapper.current);
 
     let internalKeysUpdated: string[] = [];
-    const childrenKeysAssert: Record<Key, string> = {};
+    const childrenKeysAssert: Record<string | number | symbol, string> = {};
     const newChildrenIndexes: number[] = [];
 
     React.Children.forEach(children, (child, i) => {
