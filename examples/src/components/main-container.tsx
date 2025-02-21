@@ -1,7 +1,7 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import Media from 'react-media';
 
-export const MainContainer: React.FC = ({ children }) => {
+export const MainContainer: React.FC<PropsWithChildren<unknown>> = ({ children }) => {
     return (
         <Media query={{ maxWidth: 599 }}>
             {matches => (
