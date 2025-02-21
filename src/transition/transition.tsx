@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback, useLayoutEffect, PropsWithChildren } from "react";
+import { flushSync } from "react-dom";
 import classnames from "classnames";
 
 import { TransitionState } from "./animation-hooks/types";
@@ -107,7 +108,11 @@ export const Transition: React.FC<PropsWithChildren<Props>> = ({
             if (hadPrevChildren && !animateContainer) {
                 exitFinishedHandler();
             }
-            udpatedState(TransitionState.ContainerRect);
+
+            // need to rerender the component after setting state to avoid animation blinking on animation exit
+            flushSync(() => {
+                udpatedState(TransitionState.ContainerRect);
+            })
         },
     });
 
@@ -212,3 +217,4 @@ Transition.defaultProps = {
 };
 
 Transition.displayName = "Transition";
+
