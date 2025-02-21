@@ -53,7 +53,7 @@ export const Transition: React.FC<PropsWithChildren<Props>> = ({
         prevChildren.current = children;
     }
 
-    const udpatedState = (state: TransitionState) => {
+    const updatedState = (state: TransitionState) => {
         if (!unmounted.current) {
             setTransitionState(state);
         }
@@ -65,7 +65,7 @@ export const Transition: React.FC<PropsWithChildren<Props>> = ({
 
     useLayoutEffect(() => {
         if (inViewEnabled && animateOnMount && !animateContainer) {
-            udpatedState(TransitionState.ContainerRect);
+            updatedState(TransitionState.ContainerRect);
         }
     }, [inViewEnabled]);
 
@@ -76,7 +76,7 @@ export const Transition: React.FC<PropsWithChildren<Props>> = ({
         }
 
         if (!transitionState) {
-            udpatedState(TransitionState.Exit);
+            updatedState(TransitionState.Exit);
         }
     });
 
@@ -91,7 +91,7 @@ export const Transition: React.FC<PropsWithChildren<Props>> = ({
 
     const { nextClientRect, prevClientRect } = useContainerRectangle({
         ...animationHooks,
-        onFinish: () => udpatedState(TransitionState.Container),
+        onFinish: () => updatedState(TransitionState.Container),
     });
 
     const exitFinishedHandler = () => {
@@ -111,7 +111,7 @@ export const Transition: React.FC<PropsWithChildren<Props>> = ({
 
             // need to rerender the component after setting state to avoid animation blinking on animation exit
             flushSync(() => {
-                udpatedState(TransitionState.ContainerRect);
+                updatedState(TransitionState.ContainerRect);
             })
         },
     });
@@ -127,7 +127,7 @@ export const Transition: React.FC<PropsWithChildren<Props>> = ({
             if (!prevChildren.current && animateContainer) {
                 exitFinishedHandler();
             }
-            udpatedState(TransitionState.Enter);
+            updatedState(TransitionState.Enter);
         },
     });
 
@@ -139,7 +139,7 @@ export const Transition: React.FC<PropsWithChildren<Props>> = ({
             if (prevChildren.current) {
                 onEnterFinished && onEnterFinished();
             }
-            udpatedState(null);
+            updatedState(null);
         },
     });
 
