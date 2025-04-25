@@ -19,8 +19,8 @@ interface BoxProps {
 }
 
 export const Box: React.FC<PropsWithChildren<BoxProps>> = ({
-    color,
-    size,
+    color = BoxColor.blueRed,
+    size = Size.Regular,
     children,
 }) => {
 
@@ -33,11 +33,6 @@ export const Box: React.FC<PropsWithChildren<BoxProps>> = ({
             {children}
         </div>
     );
-};
-
-Box.defaultProps = {
-    color: BoxColor.blueRed,
-    size: Size.Regular,
 };
 
 const sizeStyles: { [index: string]: React.CSSProperties } = {

@@ -20,9 +20,9 @@ interface Props extends ComponentTransitionProps {
 }
 
 export const Transition: React.FC<PropsWithChildren<Props>> = ({
-    animateContainer,
-    animateContainerDuration,
-    animateContainerEasing,
+    animateContainer = false,
+    animateContainerDuration = defaultTransitionDuration,
+    animateContainerEasing = defaultTransitionEasing,
     animateOnMount,
     children,
     className,
@@ -109,10 +109,16 @@ export const Transition: React.FC<PropsWithChildren<Props>> = ({
                 exitFinishedHandler();
             }
 
-            // need to rerender the component after setting state to avoid animation blinking on animation exit
-            flushSync(() => {
+            // If flushSync is done when there are no children, then we get a warning because we are still in react lifecycle
+            // So, if there are no children it means that there was no exit animation therefore we are yet in useEffect of useExitAnimation
+            if (hadPrevChildren && !disabled) {
+                // need to rerender the component after setting state to avoid animation blinking on animation exit
+                flushSync(() => {
+                    updatedState(TransitionState.ContainerRect);
+                })
+            } else {
                 updatedState(TransitionState.ContainerRect);
-            })
+            }
         },
     });
 
@@ -208,12 +214,6 @@ const didChildrenChanged = (prevChildren: React.ReactNode, children: React.React
     }
 
     return true;
-};
-
-Transition.defaultProps = {
-    animateContainer: false,
-    animateContainerDuration: defaultTransitionDuration,
-    animateContainerEasing: defaultTransitionEasing,
 };
 
 Transition.displayName = "Transition";
