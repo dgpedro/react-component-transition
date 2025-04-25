@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React, { PropsWithChildren, useContext } from "react";
 
 import { ComponentTransitionContext } from "./context";
 import { Transition, LazyTransition } from "../transition";
 import { ComponentTransitionProps } from "../types";
 
-export const ComponentTransition: React.FC<ComponentTransitionProps> = (props) => {
+export const ComponentTransition: React.FC<PropsWithChildren<ComponentTransitionProps>> = (props) => {
 
     const context = useContext(ComponentTransitionContext);
 

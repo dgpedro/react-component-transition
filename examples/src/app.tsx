@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Switch, Route, useLocation, Redirect } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Media from 'react-media';
 
 import { ComponentTransition, AnimationTypes } from "../../src";
@@ -49,12 +49,12 @@ const AppRoutes: React.FC<{ isMobile: boolean }> = ({ isMobile }) => {
             animateContainer={true}
         >
             <div key={location.key} style={isMobile ? stylesMobile.content : styles.content}>
-                <Switch location={location}>
-                    <Route path="/show-hide" component={ShowHide} />
-                    <Route path="/transition" component={Transition} />
-                    <Route path="/list" component={List} />
-                    <Redirect to='/show-hide' />
-                </Switch>
+                <Routes location={location}>
+                    <Route path="/show-hide" element={<ShowHide />} />
+                    <Route path="/transition" element={<Transition />} />
+                    <Route path="/list" element={<List />} />
+                    <Route path="*" element={<Navigate to='/show-hide' replace />} />
+                </Routes>
             </div>
         </ComponentTransition>
     );

@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useState, useCallback, useLayoutEffect } from "react";
+import React, { useRef, useEffect, useState, useCallback, useLayoutEffect, PropsWithChildren } from "react";
+import { flushSync } from "react-dom";
 import classnames from "classnames";
 
 import { TransitionState } from "./animation-hooks/types";
@@ -18,10 +19,10 @@ interface Props extends ComponentTransitionProps {
     inViewRef?: (element: HTMLElement) => void;
 }
 
-export const Transition: React.FC<Props> = ({
-    animateContainer,
-    animateContainerDuration,
-    animateContainerEasing,
+export const Transition: React.FC<PropsWithChildren<Props>> = ({
+    animateContainer = false,
+    animateContainerDuration = defaultTransitionDuration,
+    animateContainerEasing = defaultTransitionEasing,
     animateOnMount,
     children,
     className,
@@ -52,17 +53,19 @@ export const Transition: React.FC<Props> = ({
         prevChildren.current = children;
     }
 
-    const udpatedState = (state: TransitionState) => {
+    const updatedState = (state: TransitionState) => {
         if (!unmounted.current) {
             setTransitionState(state);
         }
     };
 
-    useEffect(() => () => unmounted.current = true, []);
+    useEffect(() => () => {
+        unmounted.current = true;
+    }, []);
 
     useLayoutEffect(() => {
         if (inViewEnabled && animateOnMount && !animateContainer) {
-            udpatedState(TransitionState.ContainerRect);
+            updatedState(TransitionState.ContainerRect);
         }
     }, [inViewEnabled]);
 
@@ -73,7 +76,7 @@ export const Transition: React.FC<Props> = ({
         }
 
         if (!transitionState) {
-            udpatedState(TransitionState.Exit);
+            updatedState(TransitionState.Exit);
         }
     });
 
@@ -88,7 +91,7 @@ export const Transition: React.FC<Props> = ({
 
     const { nextClientRect, prevClientRect } = useContainerRectangle({
         ...animationHooks,
-        onFinish: () => udpatedState(TransitionState.Container),
+        onFinish: () => updatedState(TransitionState.Container),
     });
 
     const exitFinishedHandler = () => {
@@ -105,7 +108,17 @@ export const Transition: React.FC<Props> = ({
             if (hadPrevChildren && !animateContainer) {
                 exitFinishedHandler();
             }
-            udpatedState(TransitionState.ContainerRect);
+
+            // If flushSync is done when there are no children, then we get a warning because we are still in react lifecycle
+            // So, if there are no children it means that there was no exit animation therefore we are yet in useEffect of useExitAnimation
+            if (hadPrevChildren && !disabled) {
+                // need to rerender the component after setting state to avoid animation blinking on animation exit
+                flushSync(() => {
+                    updatedState(TransitionState.ContainerRect);
+                })
+            } else {
+                updatedState(TransitionState.ContainerRect);
+            }
         },
     });
 
@@ -120,7 +133,7 @@ export const Transition: React.FC<Props> = ({
             if (!prevChildren.current && animateContainer) {
                 exitFinishedHandler();
             }
-            udpatedState(TransitionState.Enter);
+            updatedState(TransitionState.Enter);
         },
     });
 
@@ -132,7 +145,7 @@ export const Transition: React.FC<Props> = ({
             if (prevChildren.current) {
                 onEnterFinished && onEnterFinished();
             }
-            udpatedState(null);
+            updatedState(null);
         },
     });
 
@@ -203,10 +216,5 @@ const didChildrenChanged = (prevChildren: React.ReactNode, children: React.React
     return true;
 };
 
-Transition.defaultProps = {
-    animateContainer: false,
-    animateContainerDuration: defaultTransitionDuration,
-    animateContainerEasing: defaultTransitionEasing,
-};
-
 Transition.displayName = "Transition";
+

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
 export enum BoxColor {
     blueRed = "blueRed",
@@ -18,13 +18,13 @@ interface BoxProps {
     size?: Size;
 }
 
-export const Box: React.FC<BoxProps> = ({
-    color,
-    size,
+export const Box: React.FC<PropsWithChildren<BoxProps>> = ({
+    color = BoxColor.blueRed,
+    size = Size.Regular,
     children,
 }) => {
 
-    const style = { ...sizeStyles[size], ...colorStyles[color] };
+    const style = { ...(size !== undefined ? sizeStyles[size] : {}), ...(color !== undefined ? colorStyles[color] : {}) };
 
     return (
         <div
@@ -33,11 +33,6 @@ export const Box: React.FC<BoxProps> = ({
             {children}
         </div>
     );
-};
-
-Box.defaultProps = {
-    color: BoxColor.blueRed,
-    size: Size.Regular,
 };
 
 const sizeStyles: { [index: string]: React.CSSProperties } = {
