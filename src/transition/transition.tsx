@@ -59,8 +59,12 @@ export const Transition: React.FC<PropsWithChildren<Props>> = ({
         }
     };
 
-    useEffect(() => () => {
-        unmounted.current = true;
+    useEffect(() => {
+        unmounted.current = false;
+
+        return () => {
+            unmounted.current = true;
+        };
     }, []);
 
     useLayoutEffect(() => {
